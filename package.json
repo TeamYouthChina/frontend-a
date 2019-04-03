@@ -3,12 +3,20 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "braft-editor": "^2.2.9",
+    "eslint-plugin-react": "^7.12.4",
+    "isomorphic-fetch": "^2.2.1",
+    "mdbreact": "git+https://oauth2:HA3Lyzg_ziCJX8WTS113@git.mdbootstrap.com/mdb/react/re-pro.git",
+    "js-cookie": "^2.2.0",
+    "prop-types": "^15.7.2",
+    "query-string": "^6.4.2",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
+    "react-router-dom": "^5.0.0",
     "react-scripts": "2.1.8"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "PORT=2004 react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

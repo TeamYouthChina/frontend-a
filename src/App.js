@@ -1,28 +1,46 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import {BrowserRouter, Redirect, Route, Switch} from 'react-router-dom';
 
-class App extends Component {
+import {NoFound} from './page/no-found';
+import {Unauthorized} from './page/Unauthorized';
+import {languageHelper} from './tool/language-helper';
+
+export class App extends React.Component {
+  constructor(props) {
+    super(props);
+    // state
+    this.state = {};
+    // i18n
+    this.text = App.i18n[languageHelper()];
+  }
+
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
+      <BrowserRouter>
+        <Switch>
+          <Route
+            path="/"
+            exact
+            component={() => <Redirect to="/unauthorized" />}
+          />
+          <Route
+            path="/unauthorized"
+            component={routeProps => <Unauthorized {...routeProps} />}
+          />
+          <Route
+            path="/page-no-found"
+            component={routeProps => <NoFound {...routeProps} />}
+          />
+          <Redirect to="/page-no-found" />
+        </Switch>
+      </BrowserRouter>
     );
   }
 }
 
-export default App;
+App.i18n = [
+  {},
+  {}
+];
+
+App.propTypes = {};
