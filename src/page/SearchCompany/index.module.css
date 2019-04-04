@@ -1,0 +1,66 @@
+.blue{
+  height: 8.67vw;
+  background: linear-gradient(276.79deg, #4F65E1 9.64%, #11A9FF 100.49%), #4F65E1;
+}
+.white{
+  
+  background: #FAFBFD;
+ 
+}
+
+.dropdownItems {
+  height: 40px;
+}
+
+.dropdownItems p {
+
+}
+
+.searchInput {
+  margin-bottom: 0;
+  box-shadow: 1px 1px 1px #E3E7F5;
+  border: 0;
+}
+.searchInput:hover {
+  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
+  border-color: #eee;
+  transition: all 0.2s ease-in-out;
+}
+
+
+
+
+.searchInput::-webkit-input-placeholder {
+  color: #DBE5F7;
+  /*opacity: 1 !important;*/
+}
+
+.searchInput:-moz-placeholder { /* Firefox 18- */
+  color: #DBE5F7;
+  /*opacity: 1 !important;*/
+}
+
+.searchInput::-moz-placeholder {  /* Firefox 19+ */
+  color: #DBE5F7;
+  /*opacity: 1 !important;*/
+}
+
+.searchInput:-ms-input-placeholder {
+  color: #DBE5F7;
+}
+
+/*取消外边框*/
+.searchInput:focus {
+  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
+  border-color: #eee;
+}
+
+.searchIcon .prefix.active{
+  color: #DBE5F7;
+}
+
+.searchIcon {
+  color: #DBE5F7;
+}
+
+

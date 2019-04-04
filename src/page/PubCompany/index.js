@@ -5,11 +5,11 @@ import {Redirect} from 'react-router-dom';
 import {languageHelper} from '../../tool/language-helper';
 import {removeUrlSlashSuffix} from '../../tool/remove-url-slash-suffix';
 
-export class Unauthorized extends React.Component {
+export class PubCompany extends React.Component {
   constructor(props) {
     super(props);
     // i18n
-    this.text = Unauthorized.i18n[languageHelper()];
+    this.text = PubCompany.i18n[languageHelper()];
   }
 
   render() {
@@ -27,7 +27,7 @@ export class Unauthorized extends React.Component {
           <div
             className="cell-membrane"
           >
-            <span>Unauthorized</span>
+            <span>Not Found</span>
           </div>
         </div>
       </div>
@@ -35,12 +35,12 @@ export class Unauthorized extends React.Component {
   }
 }
 
-Unauthorized.i18n = [
+PubCompany.i18n = [
   {},
   {}
 ];
 
-Unauthorized.propTypes = {
+PubCompany.propTypes = {
   // self
 
   // React Router
