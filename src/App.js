@@ -2,7 +2,12 @@ import React from 'react';
 import {BrowserRouter, Redirect, Route, Switch} from 'react-router-dom';
 
 import {NoFound} from './page/no-found';
-import {Unauthorized} from './page/Unauthorized';
+import {Home} from './page/Home';
+import {ModifyCompany} from './page/ModifyCompany';
+import {ModifyJob} from './page/ModifyJob';
+import {SearchCompany} from './page/SearchCompany';
+import {SearchJob} from './page/SearchJob';
+
 import {languageHelper} from './tool/language-helper';
 
 export class App extends React.Component {
@@ -21,15 +26,32 @@ export class App extends React.Component {
           <Route
             path="/"
             exact
-            component={() => <Redirect to="/unauthorized" />}
+            component={() => <Redirect to="/home" />}
+          />
+          
+          <Route
+            path="/home"
+            component={routeProps => <Home {...routeProps} />}
           />
           <Route
-            path="/unauthorized"
-            component={routeProps => <Unauthorized {...routeProps} />}
+            path="/modify-company"
+            component={routeProps => <ModifyCompany {...routeProps} />}
+          />
+          <Route
+            path="/modify-job"
+            component={routeProps => <ModifyJob {...routeProps} />}
           />
           <Route
             path="/page-no-found"
             component={routeProps => <NoFound {...routeProps} />}
+          />
+          <Route
+            path="/search-company"
+            component={routeProps => <SearchCompany {...routeProps} />}
+          />
+          <Route
+            path="/search-job"
+            component={routeProps => <SearchJob {...routeProps} />}
           />
           <Redirect to="/page-no-found" />
         </Switch>
