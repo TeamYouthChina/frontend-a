@@ -1,10 +1,12 @@
 import React from 'react';
 import {BrowserRouter, Redirect, Route, Switch} from 'react-router-dom';
 
-import {NoFound} from './page/no-found';
+import {CreateCompany} from './page/CreateCompany';
+import {CreateJob} from './page/CreateJob';
 import {Home} from './page/Home';
 import {ModifyCompany} from './page/ModifyCompany';
 import {ModifyJob} from './page/ModifyJob';
+import {NoFound} from './page/no-found';
 import {SearchCompany} from './page/SearchCompany';
 import {SearchJob} from './page/SearchJob';
 
@@ -28,10 +30,17 @@ export class App extends React.Component {
             exact
             component={() => <Redirect to="/home" />}
           />
-          
           <Route
             path="/home"
             component={routeProps => <Home {...routeProps} />}
+          />
+          <Route
+            path="/create-company"
+            component={routeProps => <CreateCompany {...routeProps} />}
+          />
+          <Route
+            path="/create-job"
+            component={routeProps => <CreateJob {...routeProps} />}
           />
           <Route
             path="/modify-company"

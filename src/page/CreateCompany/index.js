@@ -8,18 +8,32 @@ import {removeUrlSlashSuffix} from '../../tool/remove-url-slash-suffix';
 import classes from './index.module.css';
 import {Breadcrumb} from '../general-component/breadcrumb';
 
-import {CompanyPic} from './company-pic';
-import {getAsync} from '../../tool/api-helper';
+import {CompanyPic} from '../ModifyCompany/company-pic';
 import {MDBBtn, MDBIcon} from 'mdbreact';
 import logo from './logo.png';
 
-class ModifyCompanyReact extends React.Component {
+class CreateCompanyReact extends React.Component {
   constructor(props) {
     super(props);
     // state
     this.state = {
+      backend: {
+        content: {
+          id: null,
+          name: null,
+          avatarUrl: null,
+          location: null,
+          website: null,
+          note: null,
+          nation: null,
+        },
+        status: {
+          code: null,
+          reason: null,
+        },
+      },
       //编辑状态设置
-      edit:false,
+      edit:true,
       name:'',
       location:'',
       website:'',
@@ -28,25 +42,15 @@ class ModifyCompanyReact extends React.Component {
     };
     
     // i18n
-    this.text = ModifyCompanyReact.i18n[languageHelper()];
+    this.text = CreateCompanyReact.i18n[languageHelper()];
   }
-  async componentDidMount() {
-    if (this.props.id) {
-      this.setState({
-        backend: await getAsync(`/companies/${this.props.id}`, true)
-      });
-    } else {
-      this.setState({
-        backend: await getAsync('/companies/1', true)
-      });
-    }
-  }
+  
   render() {
     const pathname = removeUrlSlashSuffix(this.props.location.pathname);
     if (pathname) {
       return (<Redirect to={pathname} />);
     }
-    return (this.state.backend && this.state.backend.status && (this.status.code.toString().startsWith('2'))) ? (
+    return (
       <div className={classes.background}>
         <div className={`${classes.top} cell-wall d-flex align-items-end`}>
           <Breadcrumb
@@ -208,6 +212,7 @@ class ModifyCompanyReact extends React.Component {
                               marginBottom:'0.39vw'
                             }}
                             value={this.state.name}
+                            placeholder="公司名"
                             className="form-control mr-2"
                             rows="1"
                             onChange={(e)=>{
@@ -226,6 +231,7 @@ class ModifyCompanyReact extends React.Component {
                               marginBottom:'0.39vw'
                             }}
                             value={this.state.location}
+                            placeholder="公司地点"
                             className="form-control mr-2"
                             rows="1"
                             onChange={(e)=>{
@@ -244,6 +250,7 @@ class ModifyCompanyReact extends React.Component {
                               margin:'0'
                             }}
                             value={this.state.website}
+                            placeholder="公司网址"
                             className="form-control mr-2"
                             rows="1"
                             onChange={(e)=>{
@@ -272,6 +279,7 @@ class ModifyCompanyReact extends React.Component {
                       <textarea
                         style={{fontSize:'1.09vw'}}
                         value={this.state.note}
+                        placeholder="公司概况"
                         className="form-control mr-2"
                         rows="9"
                         onChange={(e)=>{
@@ -370,7 +378,7 @@ class ModifyCompanyReact extends React.Component {
                     const tempbackend = {
                       backend: {
                         content: {
-                          id: this.state.backend.content.id,
+                          id: null,
                           name: this.state.name,
                           avatarUrl: this.state.backend.content.avatarUrl,
                           location: this.state.location,
@@ -395,47 +403,31 @@ class ModifyCompanyReact extends React.Component {
                   <MDBIcon icon="pencil-alt" className="mr-2"/>
                   保存修改
                 </MDBBtn>
-                <MDBBtn className="py-2 ml-5 mt-3 blue lighten-1" color="info" style={{width:'11.71vw'}}>
-                  <MDBIcon icon="pencil-alt" className="mr-2"/>
-                  发布职位
-                </MDBBtn>
-                <MDBBtn 
-                  className="py-2 ml-5 mt-3 blue lighten-1" 
-                  color="info" 
-                  style={{width:'11.71vw'}}
-                  onClick={() => {
-                    this.props.history.push('/create-company');
-                  }}
-                >
-                  <MDBIcon icon="pencil-alt" className="mr-2"/>
-                  新建公司
-                </MDBBtn>
+                
               </div>
             </div>
           </div>
         </div>
       </div>
-    ):null;
-   
+    );
   }
 }
 
-ModifyCompanyReact.i18n = [
+CreateCompanyReact.i18n = [
   {},
   {}
 ];
 
-ModifyCompanyReact.propTypes = {
+CreateCompanyReact.propTypes = {
   // self
 
   // React Router
-  
+  backend: PropTypes.object.isRequired,
   
   location: PropTypes.object.isRequired,
   history: PropTypes.object.isRequired,
-  id: PropTypes.number.isRequired
   // React Redux
-  
+  bodyClientWidth: PropTypes.number.isRequired
 };
 
-export const ModifyCompany = (ModifyCompanyReact);
+export const CreateCompany = (CreateCompanyReact);

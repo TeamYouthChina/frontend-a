@@ -8,19 +8,15 @@ import {removeUrlSlashSuffix} from '../../tool/remove-url-slash-suffix';
 
 import {Breadcrumb} from '../general-component/breadcrumb';
 import classes from './index.module.css';
-import {content} from './index.mock';
-
-import {mockGetAsync} from '../../tool/api-helper';
 import {MDBBtn, MDBIcon} from 'mdbreact';
-import logo from '../CreateJob/logo.png';
+import logo from './logo.png';
 import amazon from './amazon.svg';
 
 
-class ModifyJobReact extends React.Component {
+class CreateJobReact extends React.Component {
   constructor(props) {
     super(props);
 
-    
     // state
     this.state = {
       //Data set
@@ -51,9 +47,9 @@ class ModifyJobReact extends React.Component {
           reason: null,
         },
       },
-      
+
       //编辑状态设置
-      edit:false,
+      edit:true,
       //页面state
       job_name:'',
       location:'',
@@ -64,22 +60,19 @@ class ModifyJobReact extends React.Component {
       job_duty:'',
       note:'',
       companyname:''
-      
-      
+
+
     };
     // i18n
-    this.text = ModifyJobReact.i18n[languageHelper()];
+    this.text = CreateJobReact.i18n[languageHelper()];
   }
   
-  
-  async componentDidMount() {
-   
+  /*async componentDidMount() {
+
 
     const requestedData = await mockGetAsync(content);
-    this.setState({ ...this.state, backend: requestedData});
-  }
-  
-  
+    this.setState({...this.state, backend: requestedData});
+  }*/
   
   render() {
     const pathname = removeUrlSlashSuffix(this.props.location.pathname);
@@ -97,8 +90,8 @@ class ModifyJobReact extends React.Component {
                 subPath: '/search-job'
               },
               {
-                name: '修改职位',
-                subPath: '/modify-job'
+                name: '新建职位',
+                subPath: '/create-job'
               },
 
             ]}
@@ -140,7 +133,7 @@ class ModifyJobReact extends React.Component {
                     <div className={classes.descontent}>
 
                       <div className={classes.name}>
-                        职位描述
+                          职位描述
                       </div>
 
 
@@ -150,7 +143,7 @@ class ModifyJobReact extends React.Component {
                         <pre>{this.state.backend.content.job_description}</pre>
                       </div>
                       <div>
-                    
+
                       </div>
                       <div className={classes.note}><pre>{this.state.backend.content.job_duty}</pre></div>
 
@@ -179,9 +172,9 @@ class ModifyJobReact extends React.Component {
 
 
                   </div>
-                  
-                ):(
-                  <div>
+
+                ):
+                  (<div>
                     <div className={classes.jobcard}>
                       <div>
                         <div>
@@ -195,8 +188,8 @@ class ModifyJobReact extends React.Component {
                         </div>
                         <div className="d-flex mt-1">
                           <textarea
-                           
                             value={this.state.location}
+                            placeholder="地点"
                             className="form-control mr-2"
                             style={{fontSize:'1.875vw'}}
                             rows="1"
@@ -204,12 +197,10 @@ class ModifyJobReact extends React.Component {
                               this.setState({
                                 location:e.target.value
                               });
-                            }}
-                            
-                          />
-                         
+                            }}/>
                           <textarea
                             value={this.state.job_name}
+                            placeholder="工作名称"
                             className="form-control"
                             style={{fontSize:'1.875vw'}}
                             rows="1"
@@ -224,6 +215,7 @@ class ModifyJobReact extends React.Component {
                         <div className="d-flex mt-1">
                           <textarea
                             value={this.state.location}
+                            placeholder="地点"
                             className="form-control mr-1"
                             style={{fontSize:'1.09vw'}}
                             rows="1"
@@ -231,10 +223,10 @@ class ModifyJobReact extends React.Component {
                               this.setState({
                                 location:e.target.value
                               });
-                            }}
-                          />
+                            }}/>
                           <textarea
                             value={this.state.worktime}
+                            placeholder="工作时长（如：每周5天）"
                             className="form-control mr-1"
                             style={{fontSize:'1.09vw'}}
                             rows="1"
@@ -246,6 +238,7 @@ class ModifyJobReact extends React.Component {
                           />
                           <textarea
                             value={this.state.salary}
+                            placeholder="薪水"
                             className="form-control mr-1"
                             style={{fontSize:'1.09vw'}}
                             rows="1"
@@ -257,6 +250,7 @@ class ModifyJobReact extends React.Component {
                           />
                           <textarea
                             value={this.state.range}
+                            placeholder="工作时间（如：3-5个月）"
                             className="form-control"
                             style={{fontSize:'1.09vw'}}
                             rows="1"
@@ -266,7 +260,7 @@ class ModifyJobReact extends React.Component {
                               });
                             }}
                           />
-                         
+
                         </div>
                         <div className="red-text h6">API没有</div>
                       </div>
@@ -279,11 +273,12 @@ class ModifyJobReact extends React.Component {
                       <div className={classes.name}>
                         职位描述
                       </div>
-                      
+
 
                       <div className={classes.note}>
                         <textarea
                           value={this.state.job_description}
+                          placeholder="职位描述"
                           className="form-control"
                           style={{fontSize:'1.09vw'}}
                           rows="7"
@@ -291,13 +286,13 @@ class ModifyJobReact extends React.Component {
                             this.setState({
                               job_description:e.target.value
                             });
-                            
                           }}
                         />
                       </div>
                       <div className={classes.note}>
                         <textarea
                           value={this.state.job_duty}
+                          placeholder="职位需求"
                           className="form-control"
                           style={{fontSize:'1.09vw'}}
                           rows="4"
@@ -321,6 +316,7 @@ class ModifyJobReact extends React.Component {
                         <span className={classes.company}>
                           <textarea
                             value={this.state.companyname}
+                            placeholder="公司名"
                             className="form-control mr-1"
                             style={{fontSize:'1.09vw'}}
                             rows="1"
@@ -335,6 +331,7 @@ class ModifyJobReact extends React.Component {
                       <div className={classes.note}>
                         <textarea
                           value={this.state.note}
+                          placeholder="公司详情"
                           className="form-control mr-1"
                           style={{fontSize:'1.09vw'}}
                           rows="8"
@@ -357,28 +354,19 @@ class ModifyJobReact extends React.Component {
                     </div>
 
 
-                  </div>
-                )}
+                  </div>)}
 
-               
-                
-                
-              
+
+
+
+
+
               </div>
               <div>
                 <div
                   onClick={()=>{
                     this.setState({
                       edit:true,
-                      job_name:this.state.backend.content.name,
-                      location:this.state.backend.content.location,
-                      salary:this.state.backend.content.salary,
-                      range:this.state.backend.content.range,
-                      worktime:this.state.backend.content.worktime,
-                      job_duty:this.state.backend.content.job_duty,
-                      job_description:this.state.backend.content.job_description,
-                      note:this.state.backend.content.organization.note,
-                      companyname:this.state.backend.content.organization.name
                     });
                   }}
                 >
@@ -390,7 +378,7 @@ class ModifyJobReact extends React.Component {
                       disabled
                     >
                       <MDBIcon icon="edit" className="mr-2"/>
-                      正在修改
+                      正在创建
                     </MDBBtn>
                   ):(
                     <MDBBtn
@@ -399,23 +387,20 @@ class ModifyJobReact extends React.Component {
                       style={{width:'11.71vw'}}
                     >
                       <MDBIcon icon="edit" className="mr-2"/>
-                      开始修改
+                      开始创建
                     </MDBBtn>
                   )
                   }
-                 
-                 
                 </div>
-                <MDBBtn 
-                  className="py-2 ml-5 mt-3 blue lighten-1" 
-                  color="info" 
+                <MDBBtn
+                  className="py-2 ml-5 mt-3 blue lighten-1"
+                  color="info"
                   style={{width:'11.71vw'}}
-
                   onClick={()=>{
                     const tempbackend = {
                       backend: {
                         content: {
-                          id:this.state.backend.content.id,
+                          id:null,
                           name: this.state.job_name,
                           organization: {
                             id: this.state.backend.content.organization.id,
@@ -447,22 +432,14 @@ class ModifyJobReact extends React.Component {
                   }
                   }
                 >
+                  
                   <MDBIcon icon="archive" className="mr-2"/>
-                  保存修改
-                 
+                  保存职位
                 </MDBBtn>
-                <MDBBtn
-                  className="py-2 ml-5 mt-3 blue lighten-1" color="info" style={{width:'11.71vw'}}
-                  onClick={() => {
-                    this.props.history.push('/create-job');
-                  }}
-                >
-                  <MDBIcon icon="pencil-alt" className="mr-2"/>
-                  新建职位
-                </MDBBtn>
-                
+
+
               </div>
-             
+
             </div>
           </div>
         </div>
@@ -471,21 +448,20 @@ class ModifyJobReact extends React.Component {
   }
 }
 
-ModifyJobReact.i18n = [
+CreateJobReact.i18n = [
   {},
   {}
 ];
 
-ModifyJobReact.propTypes = {
+CreateJobReact.propTypes = {
   // self
 
   // React Router
   backend: PropTypes.object.isRequired,
 
   location: PropTypes.object.isRequired,
-  history: PropTypes.object.isRequired,
   // React Redux
   bodyClientWidth: PropTypes.number.isRequired
 };
 
-export const ModifyJob = (ModifyJobReact);
+export const CreateJob = (CreateJobReact);
