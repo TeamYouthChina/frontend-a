@@ -8,6 +8,10 @@ span {
   line-height: 1;
 }
 
+pre {
+  white-space: pre-wrap;
+}
+
 .cell-wall {
   display: flex;
   justify-content: center;
