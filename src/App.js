@@ -43,11 +43,11 @@ export class App extends React.Component {
             component={routeProps => <CreateJob {...routeProps} />}
           />
           <Route
-            path="/modify-company"
+            path="/modify-company/:id"
             component={routeProps => <ModifyCompany {...routeProps} />}
           />
           <Route
-            path="/modify-job"
+            path="/modify-job/:id"
             component={routeProps => <ModifyJob {...routeProps} />}
           />
           <Route
