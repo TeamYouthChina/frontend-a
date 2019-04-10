@@ -11,6 +11,7 @@ import classes from './index.module.css';
 import {MDBBtn, MDBIcon} from 'mdbreact';
 import logo from './logo.png';
 import amazon from './amazon.svg';
+import {put} from '../../tool/api-helper';
 
 
 class CreateJobReact extends React.Component {
@@ -19,42 +20,14 @@ class CreateJobReact extends React.Component {
 
     // state
     this.state = {
-      //Data set
-      backend: {
-        content:{
-          id: null,
-          name: null,
-          organization:{
-            id:null,
-            name:null,
-            avatarUrl: null,
-            location: null,
-            note: null
-          },
-
-          location: null,
-          range:null,
-          salary:null,
-          worktime:null,
-          type:null,
-          job_description:
-            null,
-          job_duty:
-            null,
-        },
-        status: {
-          code: null,
-          reason: null,
-        },
-      },
-
+      
       //编辑状态设置
       edit:true,
       //页面state
       job_name:'',
       location:'',
-      salary:'',
-      range:'',
+      type:'',
+      deadLine:'',
       worktime:'',
       job_description:'',
       job_duty:'',
@@ -65,15 +38,34 @@ class CreateJobReact extends React.Component {
     };
     // i18n
     this.text = CreateJobReact.i18n[languageHelper()];
+    this.backendPut = null;
   }
-  
-  /*async componentDidMount() {
+
+  async componentDidMount() {
+    
+    this.backendPut = {
+      id: null,
+      name: null,
+      organization: {
+        id: null,
+        name: null,
+        avatarUrl: null,
+        //location: null,
+        website: null,
+        note: null,
+        nation: null
+      },
+      location: null,
+      type: null,
+      deadLine: null,
+      job_description: null,
+      job_duty: null
+
+    };
+    
+  }
 
 
-    const requestedData = await mockGetAsync(content);
-    this.setState({...this.state, backend: requestedData});
-  }*/
-  
   render() {
     const pathname = removeUrlSlashSuffix(this.props.location.pathname);
     if (pathname) {
@@ -114,15 +106,14 @@ class CreateJobReact extends React.Component {
                             }}
                           />
                         </div>
-                        <div className={classes.title}>({this.state.backend.content.location}){this.state.backend.content.name}</div>
-                        <div className={classes.date}>{this.state.backend.content.date}</div>
+                        <div className={classes.title}>({this.state.location}){this.state.job_name}</div>
+                        
                         <div
                           className={classes.detail}
                         >
-                          {this.state.backend.content.location} |
-                          {this.state.backend.content.worktime} |
-                          {this.state.backend.content.salary} |
-                          {this.state.backend.content.range}
+                          {this.state.location} |
+                          {this.state.type} |
+                          {this.state.deadLine}
                         </div>
                         <div className="red-text h6">API没有</div>
                       </div>
@@ -140,12 +131,12 @@ class CreateJobReact extends React.Component {
                       <div
                         className={classes.note}
                       >
-                        <pre>{this.state.backend.content.job_description}</pre>
+                        <pre>{this.state.job_description}</pre>
                       </div>
                       <div>
 
                       </div>
-                      <div className={classes.note}><pre>{this.state.backend.content.job_duty}</pre></div>
+                      <div className={classes.note}><pre>{this.state.job_duty}</pre></div>
 
 
                     </div>
@@ -156,9 +147,9 @@ class CreateJobReact extends React.Component {
 
                       <div>
                         <img src={amazon}/>
-                        <span className={classes.company}>{this.state.backend.content.organization.name}</span>
+                        <span className={classes.company}>{this.state.companyname}</span>
                       </div>
-                      <div className={classes.note}><pre>{this.state.backend.content.organization.note}</pre></div>
+                      <div className={classes.note}><pre>{this.state.note}</pre></div>
                     </div>
 
                     <div className={classes.simcontent}>
@@ -211,7 +202,6 @@ class CreateJobReact extends React.Component {
                             }}
                           />
                         </div>
-                        <div className={classes.date}>{this.state.backend.content.date}</div>
                         <div className="d-flex mt-1">
                           <textarea
                             value={this.state.location}
@@ -224,39 +214,28 @@ class CreateJobReact extends React.Component {
                                 location:e.target.value
                               });
                             }}/>
+                         
                           <textarea
-                            value={this.state.worktime}
-                            placeholder="工作时长（如：每周5天）"
+                            value={this.state.type}
+                            placeholder="类型"
                             className="form-control mr-1"
                             style={{fontSize:'1.09vw'}}
                             rows="1"
                             onChange={(e)=>{
                               this.setState({
-                                worktime:e.target.value
+                                type:e.target.value
                               });
                             }}
                           />
                           <textarea
-                            value={this.state.salary}
-                            placeholder="薪水"
-                            className="form-control mr-1"
-                            style={{fontSize:'1.09vw'}}
-                            rows="1"
-                            onChange={(e)=>{
-                              this.setState({
-                                salary:e.target.value
-                              });
-                            }}
-                          />
-                          <textarea
-                            value={this.state.range}
-                            placeholder="工作时间（如：3-5个月）"
+                            value={this.state.deadLine}
+                            placeholder="截止时间"
                             className="form-control"
                             style={{fontSize:'1.09vw'}}
                             rows="1"
                             onChange={(e)=>{
                               this.setState({
-                                range:e.target.value
+                                deadLine:e.target.value
                               });
                             }}
                           />
@@ -397,40 +376,20 @@ class CreateJobReact extends React.Component {
                   color="info"
                   style={{width:'11.71vw'}}
                   onClick={()=>{
-                    const tempbackend = {
-                      backend: {
-                        content: {
-                          id:null,
-                          name: this.state.job_name,
-                          organization: {
-                            id: this.state.backend.content.organization.id,
-                            name: this.state.companyname,
-                            avatarUrl: this.state.backend.content.organization.avatarUrl,
-                            location: this.state.location,
-                            note: this.state.note
-                          },
-
-                          location: this.state.location,
-                          range: this.state.range,
-                          salary: this.state.salary,
-                          worktime: this.state.worktime,
-                          type: null,
-                          job_description: this.state.job_description,
-                          job_duty: this.state.job_duty
-                        },
-                        status: {
-                          code: this.state.backend.status.code,
-                          reason: this.state.backend.status.reason,
-                        },
-                      },
-
-                    };
-                    this.setState({
-                      edit:false,
-                      backend:tempbackend.backend
+                    this.backendPut.name=this.state.job_name;
+                    this.backendPut.location=this.location;
+                    this.backendPut.type=this.state.type;
+                    this.backendPut.deadLine=this.state.deadLine;
+                    this.backendPut.job_duty=this.state.job_duty;
+                    this.backendPut.job_description=this.state.job_description;
+                    this.backendPut.organization.note=this.state.note;
+                    this.backendPut.organization.name=this.state.companyname;
+                    put(`/jobs/${this.backendPut.id}`, this.backendPut).then(() => {
+                      this.setState({
+                        edit: false
+                      });
                     });
-                  }
-                  }
+                  }}
                 >
                   
                   <MDBIcon icon="archive" className="mr-2"/>
@@ -458,6 +417,7 @@ CreateJobReact.propTypes = {
 
   // React Router
   backend: PropTypes.object.isRequired,
+  match: PropTypes.object.isRequired,
 
   location: PropTypes.object.isRequired,
   // React Redux

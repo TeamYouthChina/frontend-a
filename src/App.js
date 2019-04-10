@@ -4,6 +4,7 @@ import {BrowserRouter, Redirect, Route, Switch} from 'react-router-dom';
 import {CreateCompany} from './page/CreateCompany';
 import {CreateJob} from './page/CreateJob';
 import {Home} from './page/Home';
+import {Login} from './page/Login';
 import {ModifyCompany} from './page/ModifyCompany';
 import {ModifyJob} from './page/ModifyJob';
 import {NoFound} from './page/no-found';
@@ -11,6 +12,10 @@ import {SearchCompany} from './page/SearchCompany';
 import {SearchJob} from './page/SearchJob';
 
 import {languageHelper} from './tool/language-helper';
+
+import {post} from './tool/api-helper';
+
+post('/login', {id: 1, password: '123456'});
 
 export class App extends React.Component {
   constructor(props) {
@@ -28,12 +33,9 @@ export class App extends React.Component {
           <Route
             path="/"
             exact
-            component={() => <Redirect to="/home" />}
+            component={() => <Redirect to="/login" />}
           />
-          <Route
-            path="/home"
-            component={routeProps => <Home {...routeProps} />}
-          />
+         
           <Route
             path="/create-company"
             component={routeProps => <CreateCompany {...routeProps} />}
@@ -41,6 +43,14 @@ export class App extends React.Component {
           <Route
             path="/create-job"
             component={routeProps => <CreateJob {...routeProps} />}
+          />
+          <Route
+            path="/home"
+            component={routeProps => <Home {...routeProps} />}
+          />
+          <Route
+            path="/login"
+            component={routeProps => <Login {...routeProps} />}
           />
           <Route
             path="/modify-company/:id"
