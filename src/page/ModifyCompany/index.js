@@ -12,6 +12,7 @@ import {CompanyPic} from './company-pic';
 import {getAsync, put} from '../../tool/api-helper';
 import {MDBBtn, MDBIcon} from 'mdbreact';
 import logo from './logo.png';
+import {Succeed} from '../general-component/successful';
 
 class ModifyCompanyReact extends React.Component {
   constructor(props) {
@@ -24,6 +25,7 @@ class ModifyCompanyReact extends React.Component {
       location: '',
       website: '',
       note: '',
+      response:'',
     };
     // i18n
     this.text = ModifyCompanyReact.i18n[languageHelper()];
@@ -41,7 +43,7 @@ class ModifyCompanyReact extends React.Component {
       id: this.backendGet.content.id,
       name: this.backendGet.content.name,
       avatarUrl: this.backendGet.content.avatarUrl,
-      location: this.backendGet.content.location,
+      //location: this.backendGet.content.location,
       website: this.backendGet.content.website,
       note: this.backendGet.content.note,
       nation: this.backendGet.content.nation
@@ -176,21 +178,7 @@ class ModifyCompanyReact extends React.Component {
                           <span className={classes.titlebolder}> 所属行业</span>
                           <span className={classes.title}> 所属行业</span>
                         </p>
-                        <br />
-                        <p>
-                          <span className={classes.titlebolder}> 公司规模</span>
-                          <span className={classes.title}> 公司规模</span>
-                        </p>
-                        <br />
-                        <p>
-                          <span className={classes.titlebolder}> 公司类型</span>
-                          <span className={classes.title}> 公司类型</span>
-                        </p>
-                        <br />
-                        <p>
-                          <span className={classes.titlebolder}> 创立时间</span>
-                          <span className={classes.title}> 创立时间</span>
-                        </p>
+                       
                       </div>
                       <div className={classes.content}>
                         <div className="d-flex justify-content-between">
@@ -278,21 +266,6 @@ class ModifyCompanyReact extends React.Component {
                           <span className={classes.titlebolder}> 所属行业</span>
                           <span className={classes.title}> 所属行业</span>
                         </p>
-                        <br />
-                        <p>
-                          <span className={classes.titlebolder}> 公司规模</span>
-                          <span className={classes.title}> 公司规模</span>
-                        </p>
-                        <br />
-                        <p>
-                          <span className={classes.titlebolder}> 公司类型</span>
-                          <span className={classes.title}> 公司类型</span>
-                        </p>
-                        <br />
-                        <p>
-                          <span className={classes.titlebolder}> 创立时间</span>
-                          <span className={classes.title}> 创立时间</span>
-                        </p>
                       </div>
 
                       <div className={classes.content}>
@@ -354,18 +327,20 @@ class ModifyCompanyReact extends React.Component {
                   style={{width: '11.71vw'}}
                   onClick={() => {
                     this.backendPut.name = this.state.name;
-                    this.backendPut.location = parseInt(this.state.location);
+                    //this.backendPut.location = parseInt(this.state.location);
                     this.backendPut.website = this.state.website;
                     this.backendPut.note = this.state.note;
                     put(`/companies/${this.backendPut.id}`, this.backendPut).then((data) => {
                       this.setState({
-                        edit: false
+                        edit: false,
+                        response:data,
                       });
                     });
                   }}
                 >
                   <MDBIcon icon="pencil-alt" className="mr-2" />
                   保存修改
+                  <Succeed code={this.state.response} text={'创建成功'}/>
                 </MDBBtn>
                 <MDBBtn className="py-2 ml-5 mt-3 blue lighten-1" color="info" style={{width: '11.71vw'}}>
                   <MDBIcon icon="pencil-alt" className="mr-2" />

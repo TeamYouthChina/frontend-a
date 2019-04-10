@@ -8,9 +8,9 @@ import {removeUrlSlashSuffix} from '../../tool/remove-url-slash-suffix';
 
 import {Breadcrumb} from '../general-component/breadcrumb';
 import classes from './index.module.css';
-import {content} from './index.mock';
 
-import {mockGetAsync} from '../../tool/api-helper';
+
+import {getAsync, put} from '../../tool/api-helper';
 import {MDBBtn, MDBIcon} from 'mdbreact';
 import logo from '../CreateJob/logo.png';
 import amazon from './amazon.svg';
@@ -23,62 +23,66 @@ class ModifyJobReact extends React.Component {
     
     // state
     this.state = {
-      //Data set
-      backend: {
-        content:{
-          id: null,
-          name: null,
-          organization:{
-            id:null,
-            name:null,
-            avatarUrl: null,
-            location: null,
-            note: null
-          },
-
-          location: null,
-          range:null,
-          salary:null,
-          worktime:null,
-          type:null,
-          job_description:
-            null,
-          job_duty:
-            null,
-        },
-        status: {
-          code: null,
-          reason: null,
-        },
-      },
+     
       
       //编辑状态设置
       edit:false,
       //页面state
       job_name:'',
       location:'',
-      salary:'',
-      range:'',
+      type:'',
+      deadLine:'',
       worktime:'',
       job_description:'',
       job_duty:'',
       note:'',
-      companyname:''
+      companyname:'',
       
       
     };
     // i18n
     this.text = ModifyJobReact.i18n[languageHelper()];
+    this.backendGet = null;
+    this.backendPut = null;
   }
-  
-  
-  async componentDidMount() {
-   
 
-    const requestedData = await mockGetAsync(content);
-    this.setState({ ...this.state, backend: requestedData});
+
+  async componentDidMount() {
+    this.backendGet = await getAsync(`/jobs/${this.props.match.params.id}`);
+    if (!this.backendGet || !this.backendGet.status.code.toString().startsWith('2')) {
+      return;
+    }
+    this.backendPut = {
+      id: this.backendGet.content.id,
+      name: this.backendGet.content.name,
+      organization: {
+        id: this.backendGet.content.organization.id,
+        name: this.backendGet.content.organization.name,
+        avatarUrl: this.backendGet.content.organization.avatarUrl,
+        //location: this.backendGet.content.organization.location,
+        website: this.backendGet.content.organization.website,
+        note: this.backendGet.content.organization.note,
+        nation: this.backendGet.content.organization.nation
+      },
+      location: this.backendGet.content.location,
+      type: this.backendGet.content.type,
+      deadLine: this.backendGet.content.deadLine,
+      job_description: this.backendGet.content.job_description,
+      job_duty: this.backendGet.content.job_duty
+      
+    };
+    this.setState({
+      edit: false,
+      job_name: this.backendGet.content.name,
+      location: this.backendGet.content.location,
+      type:this.backendGet.content.type,
+      deadLine: this.backendGet.content.deadLine,
+      job_duty: this.backendGet.content.job_duty,
+      job_description:this.backendGet.content.job_description,
+      note: this.backendGet.content.organization.note,
+      companyname:this.backendGet.content.organization.name,
+    });
   }
-  
   
   
   render() {
@@ -86,7 +90,7 @@ class ModifyJobReact extends React.Component {
     if (pathname) {
       return (<Redirect to={pathname} />);
     }
-    return (
+    return (this.backendGet && this.backendGet.status.code.toString().startsWith('2')) ? (
       <div className={classes.background}>
         <div className={`${classes.top} cell-wall d-flex align-items-end`}>
           <Breadcrumb
@@ -121,17 +125,14 @@ class ModifyJobReact extends React.Component {
                             }}
                           />
                         </div>
-                        <div className={classes.title}>({this.state.backend.content.location}){this.state.backend.content.name}</div>
-                        <div className={classes.date}>{this.state.backend.content.date}</div>
+                        <div className={classes.title}>({this.state.location}){this.state.job_name}</div>
                         <div
                           className={classes.detail}
                         >
-                          {this.state.backend.content.location} |
-                          {this.state.backend.content.worktime} |
-                          {this.state.backend.content.salary} |
-                          {this.state.backend.content.range}
+                          {this.state.location} |
+                          {this.state.type} |
+                          {this.state.deadLine}
                         </div>
-                        <div className="red-text h6">API没有</div>
                       </div>
 
 
@@ -147,12 +148,12 @@ class ModifyJobReact extends React.Component {
                       <div
                         className={classes.note}
                       >
-                        <pre>{this.state.backend.content.job_description}</pre>
+                        <pre>{this.state.job_description}</pre>
                       </div>
                       <div>
                     
                       </div>
-                      <div className={classes.note}><pre>{this.state.backend.content.job_duty}</pre></div>
+                      <div className={classes.note}><pre>{this.state.job_duty}</pre></div>
 
 
                     </div>
@@ -163,9 +164,9 @@ class ModifyJobReact extends React.Component {
 
                       <div>
                         <img src={amazon}/>
-                        <span className={classes.company}>{this.state.backend.content.organization.name}</span>
+                        <span className={classes.company}>{this.state.companyname}</span>
                       </div>
-                      <div className={classes.note}><pre>{this.state.backend.content.organization.note}</pre></div>
+                      <div className={classes.note}><pre>{this.state.note}</pre></div>
                     </div>
 
                     <div className={classes.simcontent}>
@@ -220,7 +221,7 @@ class ModifyJobReact extends React.Component {
                             }}
                           />
                         </div>
-                        <div className={classes.date}>{this.state.backend.content.date}</div>
+                       
                         <div className="d-flex mt-1">
                           <textarea
                             value={this.state.location}
@@ -233,36 +234,26 @@ class ModifyJobReact extends React.Component {
                               });
                             }}
                           />
+                        
                           <textarea
-                            value={this.state.worktime}
+                            value={this.state.type}
                             className="form-control mr-1"
                             style={{fontSize:'1.09vw'}}
                             rows="1"
                             onChange={(e)=>{
                               this.setState({
-                                worktime:e.target.value
+                                type:e.target.value
                               });
                             }}
                           />
                           <textarea
-                            value={this.state.salary}
-                            className="form-control mr-1"
-                            style={{fontSize:'1.09vw'}}
-                            rows="1"
-                            onChange={(e)=>{
-                              this.setState({
-                                salary:e.target.value
-                              });
-                            }}
-                          />
-                          <textarea
-                            value={this.state.range}
+                            value={this.state.deadLine}
                             className="form-control"
                             style={{fontSize:'1.09vw'}}
                             rows="1"
                             onChange={(e)=>{
                               this.setState({
-                                range:e.target.value
+                                deadLine:e.target.value
                               });
                             }}
                           />
@@ -370,15 +361,6 @@ class ModifyJobReact extends React.Component {
                   onClick={()=>{
                     this.setState({
                       edit:true,
-                      job_name:this.state.backend.content.name,
-                      location:this.state.backend.content.location,
-                      salary:this.state.backend.content.salary,
-                      range:this.state.backend.content.range,
-                      worktime:this.state.backend.content.worktime,
-                      job_duty:this.state.backend.content.job_duty,
-                      job_description:this.state.backend.content.job_description,
-                      note:this.state.backend.content.organization.note,
-                      companyname:this.state.backend.content.organization.name
                     });
                   }}
                 >
@@ -410,46 +392,25 @@ class ModifyJobReact extends React.Component {
                   className="py-2 ml-5 mt-3 blue lighten-1" 
                   color="info" 
                   style={{width:'11.71vw'}}
-
                   onClick={()=>{
-                    const tempbackend = {
-                      backend: {
-                        content: {
-                          id:this.state.backend.content.id,
-                          name: this.state.job_name,
-                          organization: {
-                            id: this.state.backend.content.organization.id,
-                            name: this.state.companyname,
-                            avatarUrl: this.state.backend.content.organization.avatarUrl,
-                            location: this.state.location,
-                            note: this.state.note
-                          },
-
-                          location: this.state.location,
-                          range: this.state.range,
-                          salary: this.state.salary,
-                          worktime: this.state.worktime,
-                          type: null,
-                          job_description: this.state.job_description,
-                          job_duty: this.state.job_duty
-                        },
-                        status: {
-                          code: this.state.backend.status.code,
-                          reason: this.state.backend.status.reason,
-                        },
-                      },
-
-                    };
-                    this.setState({
-                      edit:false,
-                      backend:tempbackend.backend
+                    this.backendPut.name=this.state.job_name;
+                    this.backendPut.location=this.location;
+                    this.backendPut.type=this.state.type;
+                    this.backendPut.deadLine=this.state.deadLine;
+                    this.backendPut.job_duty=this.state.job_duty;
+                    this.backendPut.job_description=this.state.job_description;
+                    this.backendPut.organization.note=this.state.note;
+                    this.backendPut.organization.name=this.state.companyname;
+                    put(`/jobs/${this.backendPut.id}`, this.backendPut).then(() => {
+                      this.setState({
+                        edit: false
+                      });
                     });
-                  }
-                  }
+                  }}
                 >
                   <MDBIcon icon="archive" className="mr-2"/>
                   保存修改
-                 
+
                 </MDBBtn>
                 <MDBBtn
                   className="py-2 ml-5 mt-3 blue lighten-1" color="info" style={{width:'11.71vw'}}
@@ -467,7 +428,7 @@ class ModifyJobReact extends React.Component {
           </div>
         </div>
       </div>
-    );
+    ):null;
   }
 }
 
@@ -481,7 +442,8 @@ ModifyJobReact.propTypes = {
 
   // React Router
   backend: PropTypes.object.isRequired,
-
+  
+  match: PropTypes.object.isRequired,
   location: PropTypes.object.isRequired,
   history: PropTypes.object.isRequired,
   // React Redux

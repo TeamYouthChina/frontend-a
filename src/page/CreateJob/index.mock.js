@@ -16,8 +16,8 @@ export const content = {
   },
   date:'一天前发布',
   location: '上海',
-  range:'3-5个月',
-  salary:'￥3000月薪',
+  deadLine:'3-5个月',
+  
   worktime:'一周五天',
   type:'实习',
   job_description:

@@ -9,42 +9,45 @@ import classes from './index.module.css';
 import {Breadcrumb} from '../general-component/breadcrumb';
 
 import {CompanyPic} from '../ModifyCompany/company-pic';
-import {MDBBtn, MDBIcon} from 'mdbreact';
+import {MDBBtn, MDBIcon,} from 'mdbreact';
+import {Succeed} from '../general-component/successful';
 import logo from './logo.png';
+import {put} from '../../tool/api-helper';
 
 class CreateCompanyReact extends React.Component {
   constructor(props) {
     super(props);
     // state
     this.state = {
-      backend: {
-        content: {
-          id: null,
-          name: null,
-          avatarUrl: null,
-          location: null,
-          website: null,
-          note: null,
-          nation: null,
-        },
-        status: {
-          code: null,
-          reason: null,
-        },
-      },
+      
       //编辑状态设置
       edit:true,
+      response:'',
       name:'',
       location:'',
       website:'',
       note:'',
       
+      
     };
     
     // i18n
     this.text = CreateCompanyReact.i18n[languageHelper()];
+   
+    this.backendPut = null;
   }
-  
+  async componentDidMount() {
+    
+    this.backendPut = {
+      id: null,
+      name: null,
+      avatarUrl: null,
+      //location: null,
+      website: null,
+      note: null,
+      nation: null,
+    };
+  }
   render() {
     const pathname = removeUrlSlashSuffix(this.props.location.pathname);
     if (pathname) {
@@ -67,6 +70,7 @@ class CreateCompanyReact extends React.Component {
 
             ]}
           />
+          
         </div>
         <div className="cell-wall">
           <div className="cell-membrane">
@@ -100,7 +104,7 @@ class CreateCompanyReact extends React.Component {
                               marginBottom:'0.39vw'
                             }}
                           >
-                            {this.state.backend.content.name}
+                            {this.state.name}
                           </p>
                           <p
                             style={{
@@ -110,7 +114,7 @@ class CreateCompanyReact extends React.Component {
                               color: '#8D9AAF',
                               marginBottom:'0.39vw'
                             }}
-                          > {this.state.backend.content.location} 
+                          > {this.state.location} 
                           </p>
                           <p
                             style={{
@@ -122,7 +126,7 @@ class CreateCompanyReact extends React.Component {
 
                             }}
                           >
-                            <a href={this.state.backend.content.website}>{this.state.backend.content.website}</a>
+                            <a href={this.state.website}>{this.state.website}</a>
                           </p>
                         </div>
 
@@ -141,7 +145,7 @@ class CreateCompanyReact extends React.Component {
 
                       <br/>
                       <pre className={classes.note}>
-                        {this.state.backend.content.note}
+                        {this.state.note}
                       </pre>
                       <br/>
                       <p>
@@ -338,11 +342,6 @@ class CreateCompanyReact extends React.Component {
                   onClick={()=>{
                     this.setState({
                       edit:true,
-                      name:this.state.backend.content.name,
-                      location:this.state.backend.content.location,
-                      website:this.state.backend.content.website,
-                      note:this.state.backend.content.note,
-                      
                     });
                   }}
                 >
@@ -374,35 +373,24 @@ class CreateCompanyReact extends React.Component {
                   className="py-2 ml-5 mt-3 blue lighten-1" 
                   color="info" 
                   style={{width:'11.71vw'}}
-                  onClick={()=>{
-                    const tempbackend = {
-                      backend: {
-                        content: {
-                          id: null,
-                          name: this.state.name,
-                          avatarUrl: this.state.backend.content.avatarUrl,
-                          location: this.state.location,
-                          website: this.state.website,
-                          note: this.state.note,
-                          nation: this.state.backend.content.nation,
-                        },
-                        status: {
-                          code: this.state.backend.status.code,
-                          reason: this.state.backend.status.reason,
-                        },
-                      },
-
-                    };
-                    this.setState({
-                      edit:false,
-                      backend:tempbackend.backend
+                  onClick={() => {
+                    this.backendPut.name = this.state.name;
+                    //this.backendPut.location = parseInt(this.state.location);
+                    this.backendPut.website = this.state.website;
+                    this.backendPut.note = this.state.note;
+                    put(`/companies/${this.backendPut.id}`, this.backendPut).then((data) => {
+                      this.setState({
+                        edit: false,
+                        response:data,
+                      });
                     });
-                  }
-                  }
+                  }}
                 >
                   <MDBIcon icon="pencil-alt" className="mr-2"/>
                   保存修改
+                  <Succeed code={this.state.response} text={'创建成功'}/>
                 </MDBBtn>
+                
                 
               </div>
             </div>

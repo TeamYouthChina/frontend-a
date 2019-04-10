@@ -5,45 +5,36 @@ import { withRouter } from 'react-router-dom';
 
 import arrow from './arrow.svg';
 import classes from './index.module.css';
-import {content} from './index.mock';
+
 import bag from './bag.svg';
 import des1 from './des1.svg';
 import employee from './employee.svg';
 import icon from './amazon.svg';
 import { languageHelper } from '../../../tool/language-helper';
-import { mockGetAsync } from '../../../tool/api-helper';
+import {getAsync} from '../../../tool/api-helper';
+
 
 class CompanyCardReact extends React.Component {
   constructor(props) {
     super(props);
     // state
     this.state = {
-      cardData: {
-        content: {
-          id: null,
-          name: null,
-          avatarUrl: null,
-          location: null,
-          website: null,
-          note: null,
-          nation: null,
-        },
-        status: {
-          code: null,
-          reason: null,
-        },
-      },
+     
     };
     // i18n
     this.text = CompanyCardReact.i18n[languageHelper()];
   }
 
   async componentDidMount() {
-    // const requestedData = await getAsync();
-    // this.setState({ cardData: requestedData, ...this.state });
-
-    const requestedData = await mockGetAsync(content);
-    this.setState({ ...this.state, cardData: requestedData});
+    if (this.props.id) {
+      this.setState({
+        backend: await getAsync(`/companies/${this.props.id}`)
+      });
+    } else {
+      this.setState({
+        backend: await getAsync('/companies/1')
+      });
+    }
   }
 
   clickOnCard = () => {};
@@ -53,11 +44,11 @@ class CompanyCardReact extends React.Component {
   
 
   render() {
-    return (
+    return (this.state.backend && this.state.backend.status.code.toString().startsWith('2')) ? (
       <div 
         className={classes.Card}
         onClick={() => {
-          this.props.history.push('/modify-company');
+          this.props.history.push(`/modify-company/${this.state.backend.content.id}`);
         }}
       >
         <div className={classes.Clickable} onClick={this.clickOnCard} />
@@ -68,7 +59,7 @@ class CompanyCardReact extends React.Component {
           </div>
           <div className={classes.Info}>
             <div className={classes.Name}>
-              <p>{this.state.cardData.content.name}</p>
+              <p>{this.state.backend.content.name}</p>
             </div>
             <div className={classes.Des1}>
               <img src={des1} alt="no img" />
@@ -99,7 +90,7 @@ class CompanyCardReact extends React.Component {
           </div>
         </div>
       </div>
-    );
+    ):null;
   }
 }
 
