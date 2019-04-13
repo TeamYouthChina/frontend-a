@@ -99,7 +99,7 @@ class SearchJobReact extends React.Component {
 
         <div className="cell-wall" style={{background:'#F0F3FA', height:'80vw'}}>
           <div className="cell-membrane">
-            <JobCard/>
+            <JobCard id={7}/>
           </div>
         </div>
       </div>

@@ -8,7 +8,7 @@ import {removeUrlSlashSuffix} from '../../tool/remove-url-slash-suffix';
 import classes from './index.module.css';
 import {Breadcrumb} from '../general-component/breadcrumb';
 
-import {CompanyPic} from './company-pic';
+//import {CompanyPic} from './company-pic';
 import {getAsync, put} from '../../tool/api-helper';
 import {MDBBtn, MDBIcon} from 'mdbreact';
 import logo from './logo.png';
@@ -46,12 +46,12 @@ class ModifyCompanyReact extends React.Component {
       //location: this.backendGet.content.location,
       website: this.backendGet.content.website,
       note: this.backendGet.content.note,
-      nation: this.backendGet.content.nation
+      nation: this.backendGet.content.nation,
     };
     this.setState({
       edit: false,
       name: this.backendGet.content.name,
-      location: this.backendGet.content.location,
+      //location: this.backendGet.content.location,
       website: this.backendGet.content.website,
       note: this.backendGet.content.note,
     });
@@ -180,24 +180,7 @@ class ModifyCompanyReact extends React.Component {
                         </p>
                        
                       </div>
-                      <div className={classes.content}>
-                        <div className="d-flex justify-content-between">
-                          <div className={classes.name}>在招职位</div>
-                          <div
-                            style={{
-                              justifyContent: 'flex-end',
-                              alignSelf: 'flex-start',
-                              color: '#8D9AAF',
-                            }}
-                          >
-                            <MDBIcon far icon="edit" />
-                          </div>
-                        </div>
-
-                        <br />
-                        <p className="h1 red-text">该公司在招职位API没有</p>
-                      </div>
-                      <CompanyPic edit={this.state.edit} />
+                     
                     </div>
                   ) : (
                     <div>
@@ -267,25 +250,7 @@ class ModifyCompanyReact extends React.Component {
                           <span className={classes.title}> 所属行业</span>
                         </p>
                       </div>
-
-                      <div className={classes.content}>
-                        <div className="d-flex justify-content-between">
-                          <div className={classes.name}>在招职位</div>
-                          <div
-                            style={{
-                              justifyContent: 'flex-end',
-                              alignSelf: 'flex-start',
-                              color: '#8D9AAF',
-                            }}
-                          >
-                            <MDBIcon far icon="edit" />
-                          </div>
-                        </div>
-
-                        <br />
-                        <p className="h1 red-text">该公司在招职位API没有</p>
-                      </div>
-                      <CompanyPic edit={this.state.edit} />
+                      
                     </div>
                   )
                 }
@@ -342,13 +307,13 @@ class ModifyCompanyReact extends React.Component {
                   保存修改
                   <Succeed code={this.state.response} text={'创建成功'}/>
                 </MDBBtn>
-                <MDBBtn className="py-2 ml-5 mt-3 blue lighten-1" color="info" style={{width: '11.71vw'}}>
+                {/*<MDBBtn className="py-2 ml-5 mt-3 " color="cyan" style={{width: '11.71vw'}}>
                   <MDBIcon icon="pencil-alt" className="mr-2" />
                   发布职位
-                </MDBBtn>
+                </MDBBtn>*/}
                 <MDBBtn
-                  className="py-2 ml-5 mt-3 blue lighten-1"
-                  color="info"
+                  className="py-2 ml-5 mt-3 "
+                  color="light-green"
                   style={{width: '11.71vw'}}
                   onClick={() => {
                     this.props.history.push('/create-company');
@@ -356,6 +321,10 @@ class ModifyCompanyReact extends React.Component {
                 >
                   <MDBIcon icon="pencil-alt" className="mr-2" />
                   新建公司
+                </MDBBtn>
+                <MDBBtn className="py-2 ml-5 mt-3" color="danger" style={{width: '11.71vw'}}>
+                  <MDBIcon icon="pencil-alt" className="mr-2" />
+                  删除公司
                 </MDBBtn>
               </div>
             </div>
