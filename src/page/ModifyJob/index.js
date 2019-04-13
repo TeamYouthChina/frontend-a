@@ -37,6 +37,7 @@ class ModifyJobReact extends React.Component {
       job_duty:'',
       note:'',
       companyname:'',
+      startTime:''
       
       
     };
@@ -55,20 +56,23 @@ class ModifyJobReact extends React.Component {
     this.backendPut = {
       id: this.backendGet.content.id,
       name: this.backendGet.content.name,
-      organization: {
-        id: this.backendGet.content.organization.id,
-        name: this.backendGet.content.organization.name,
-        avatarUrl: this.backendGet.content.organization.avatarUrl,
-        //location: this.backendGet.content.organization.location,
-        website: this.backendGet.content.organization.website,
-        note: this.backendGet.content.organization.note,
-        nation: this.backendGet.content.organization.nation
-      },
-      location: this.backendGet.content.location,
-      type: this.backendGet.content.type,
-      deadLine: this.backendGet.content.deadLine,
+      organization_id: this.backendGet.content.organization.id,
+      location: 
+       { 
+         nation_code: '999999',
+         location_code: 'CHN'
+       }
+      ,
+      type: '1',
+      //dead_line: this.backendGet.content.deadLine,
+      dead_line:'15070908800',
       job_description: this.backendGet.content.job_description,
-      job_duty: this.backendGet.content.job_duty
+      job_duty: this.backendGet.content.job_duty,
+      //start_time:this.backendGet.content.startTime,
+      //end_time: this.backendGet.content.deadLine,
+      start_time:'15070908800',
+      end_time: '15070908800',
+      
       
     };
     this.setState({
@@ -81,6 +85,7 @@ class ModifyJobReact extends React.Component {
       job_description:this.backendGet.content.job_description,
       note: this.backendGet.content.organization.note,
       companyname:this.backendGet.content.organization.name,
+      startTime:this.backendGet.content.startTime,
     });
   }
   
@@ -129,9 +134,9 @@ class ModifyJobReact extends React.Component {
                         <div
                           className={classes.detail}
                         >
-                          {this.state.location} |
-                          {this.state.type} |
-                          {this.state.deadLine}
+                          {this.state.location} 
+                          {' | '}
+                          {this.state.startTime}{' ~ '}{this.state.deadLine}
                         </div>
                       </div>
 
@@ -168,16 +173,6 @@ class ModifyJobReact extends React.Component {
                       </div>
                       <div className={classes.note}><pre>{this.state.note}</pre></div>
                     </div>
-
-                    <div className={classes.simcontent}>
-
-                      <div className={classes.name}>相似职位</div>
-
-
-                      <br/>
-                      <p className="h1 red-text">相似职位API没有</p>
-                    </div>
-
 
                   </div>
                   
@@ -337,17 +332,6 @@ class ModifyJobReact extends React.Component {
                         />
                       </div>
                     </div>
-
-                    <div className={classes.simcontent}>
-
-                      <div className={classes.name}>相似职位</div>
-
-
-                      <br/>
-                      <p className="h1 red-text">相似职位API没有</p>
-                    </div>
-
-
                   </div>
                 )}
 
@@ -395,12 +379,14 @@ class ModifyJobReact extends React.Component {
                   onClick={()=>{
                     this.backendPut.name=this.state.job_name;
                     this.backendPut.location=this.location;
-                    this.backendPut.type=this.state.type;
-                    this.backendPut.deadLine=this.state.deadLine;
+                    //this.backendPut.type=this.state.type;
+                    //this.backendPut.dead_line=this.state.deadLine;
+                    //this.backendPut.end_time=this.state.deadLine;
                     this.backendPut.job_duty=this.state.job_duty;
                     this.backendPut.job_description=this.state.job_description;
-                    this.backendPut.organization.note=this.state.note;
-                    this.backendPut.organization.name=this.state.companyname;
+                    //this.backendPut.organization.note=this.state.note;
+                    //this.backendPut.organization.name=this.state.companyname;
+                    //console.log(this.backendPut);
                     put(`/jobs/${this.backendPut.id}`, this.backendPut).then(() => {
                       this.setState({
                         edit: false
@@ -413,7 +399,7 @@ class ModifyJobReact extends React.Component {
 
                 </MDBBtn>
                 <MDBBtn
-                  className="py-2 ml-5 mt-3 blue lighten-1" color="info" style={{width:'11.71vw'}}
+                  className="py-2 ml-5 mt-3" color="light-green" style={{width:'11.71vw'}}
                   onClick={() => {
                     this.props.history.push('/create-job');
                   }}
@@ -421,7 +407,10 @@ class ModifyJobReact extends React.Component {
                   <MDBIcon icon="pencil-alt" className="mr-2"/>
                   新建职位
                 </MDBBtn>
-                
+                <MDBBtn className="py-2 ml-5 mt-3" color="danger" style={{width: '11.71vw'}}>
+                  <MDBIcon icon="pencil-alt" className="mr-2" />
+                  删除公司
+                </MDBBtn>
               </div>
              
             </div>

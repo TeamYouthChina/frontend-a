@@ -7,9 +7,10 @@ import arrow from './arrow.svg';
 import classes from './index.module.css';
 
 import bag from './bag.svg';
-import des1 from './des1.svg';
+
 import employee from './employee.svg';
-import icon from './amazon.svg';
+
+import location from './location.svg';
 import { languageHelper } from '../../../tool/language-helper';
 import {getAsync} from '../../../tool/api-helper';
 
@@ -54,25 +55,23 @@ class CompanyCardReact extends React.Component {
         <div className={classes.Clickable} onClick={this.clickOnCard} />
         <div className={classes.UnClickable}>
           <div className={classes.Icon}>
-            {/* <img src={this.state.cardData.content.avatarUrl} alt="no img" /> */}
-            <img src={icon} alt="no img" />
+            <img src={(this.state.backend.content.avatarUrl)?(this.state.backend.content.avatarUrl):('https://frontendpic.oss-us-east-1.aliyuncs.com/%E5%85%AC%E5%8F%B8.png')} alt="no img" />
           </div>
           <div className={classes.Info}>
             <div className={classes.Name}>
               <p>{this.state.backend.content.name}</p>
             </div>
-            <div className={classes.Des1}>
-              <img src={des1} alt="no img" />
+            <div className={classes.Des2}>
+              <img src={location} alt="no img" className="img-fluid"/>
               <p>
-                e-commerce<span style={{ color: 'red' }}>api没有这个</span>
+                {this.state.backend.location}
               </p>
             </div>
             <div className={classes.Des2}>
               <img src={employee} alt="no img" />
-              <p>
-                100{this.text.employee}
-                <span style={{ color: 'red' }}>api没有这个</span>
-              </p>
+              <a href={this.state.backend.content.website}>
+                {this.state.backend.content.website}
+              </a>
             </div>
           </div>
           <div className={classes.Actions}>
@@ -80,8 +79,7 @@ class CompanyCardReact extends React.Component {
               <button>
                 <img src={bag} alt="no img" />
                 <p>
-                  {this.text.currently + 100 + this.text.openPos}
-                  <span style={{ color: 'red' }}>api没有这个</span>
+                  {this.text.currently} {this.state.backend.content.jobCount}{this.text.openPos}
                 </p>
                 <img src={arrow} alt="no img" />
               </button>

@@ -8,11 +8,11 @@ import {removeUrlSlashSuffix} from '../../tool/remove-url-slash-suffix';
 import classes from './index.module.css';
 import {Breadcrumb} from '../general-component/breadcrumb';
 
-import {CompanyPic} from '../ModifyCompany/company-pic';
+//import {CompanyPic} from '../ModifyCompany/company-pic';
 import {MDBBtn, MDBIcon,} from 'mdbreact';
 import {Succeed} from '../general-component/successful';
 import logo from './logo.png';
-import {put} from '../../tool/api-helper';
+import {post} from '../../tool/api-helper';
 
 class CreateCompanyReact extends React.Component {
   constructor(props) {
@@ -38,11 +38,13 @@ class CreateCompanyReact extends React.Component {
   }
   async componentDidMount() {
     
-    this.backendPut = {
+    this.backendPost = {
       id: null,
       name: null,
-      avatarUrl: null,
-      //location: null,
+      location: {
+        nation_code:null,
+        location_code:null,
+      },
       website: null,
       note: null,
       nation: null,
@@ -152,41 +154,8 @@ class CreateCompanyReact extends React.Component {
                         <span className={classes.titlebolder}> 所属行业</span>
                         <span className={classes.title}> 所属行业</span>
                       </p>
-                      <br/>
-                      <p>
-                        <span className={classes.titlebolder}> 公司规模</span>
-                        <span className={classes.title}> 公司规模</span>
-                      </p>
-                      <br/>
-                      <p>
-                        <span className={classes.titlebolder}> 公司类型</span>
-                        <span className={classes.title}> 公司类型</span>
-                      </p>
-                      <br/>
-                      <p>
-                        <span className={classes.titlebolder}> 创立时间</span>
-                        <span className={classes.title}> 创立时间</span>
-                      </p>
                     </div>
-
-                    <div className={classes.content}>
-                      <div className="d-flex justify-content-between">
-                        <div className={classes.name}>在招职位</div>
-                        <div
-                          style={{
-                            justifyContent:'flex-end',
-                            alignSelf:'flex-start',
-                            color: '#8D9AAF',
-                          }}
-                        >
-                          <MDBIcon far icon="edit" />
-                        </div>
-                      </div>
-
-                      <br/>
-                      <p className="h1 red-text">该公司在招职位API没有</p>
-                    </div>
-                    <CompanyPic edit={this.state.edit}/>
+                    
                   </div>
                 ):(
                   <div>
@@ -298,41 +267,8 @@ class CreateCompanyReact extends React.Component {
                         <span className={classes.titlebolder}> 所属行业</span>
                         <span className={classes.title}> 所属行业</span>
                       </p>
-                      <br/>
-                      <p>
-                        <span className={classes.titlebolder}> 公司规模</span>
-                        <span className={classes.title}> 公司规模</span>
-                      </p>
-                      <br/>
-                      <p>
-                        <span className={classes.titlebolder}> 公司类型</span>
-                        <span className={classes.title}> 公司类型</span>
-                      </p>
-                      <br/>
-                      <p>
-                        <span className={classes.titlebolder}> 创立时间</span>
-                        <span className={classes.title}> 创立时间</span>
-                      </p>
                     </div>
-
-                    <div className={classes.content}>
-                      <div className="d-flex justify-content-between">
-                        <div className={classes.name}>在招职位</div>
-                        <div
-                          style={{
-                            justifyContent:'flex-end',
-                            alignSelf:'flex-start',
-                            color: '#8D9AAF',
-                          }}
-                        >
-                          <MDBIcon far icon="edit" />
-                        </div>
-                      </div>
-
-                      <br/>
-                      <p className="h1 red-text">该公司在招职位API没有</p>
-                    </div>
-                    <CompanyPic edit={this.state.edit}/>
+                    
                   </div>
                 )}
                 
@@ -374,21 +310,23 @@ class CreateCompanyReact extends React.Component {
                   color="info" 
                   style={{width:'11.71vw'}}
                   onClick={() => {
-                    this.backendPut.name = this.state.name;
+                    this.backendPost.name = this.state.name;
                     //this.backendPut.location = parseInt(this.state.location);
-                    this.backendPut.website = this.state.website;
-                    this.backendPut.note = this.state.note;
-                    put(`/companies/${this.backendPut.id}`, this.backendPut).then((data) => {
+                    this.backendPost.website = this.state.website;
+                    this.backendPost.note = this.state.note;
+                    post('/companies', this.backendPost).then((data) => {
                       this.setState({
                         edit: false,
-                        response:data,
                       });
+                      return(
+                        <Succeed code={data} text={'创建成功'}/>
+                      );
                     });
                   }}
                 >
                   <MDBIcon icon="pencil-alt" className="mr-2"/>
                   保存修改
-                  <Succeed code={this.state.response} text={'创建成功'}/>
+                  
                 </MDBBtn>
                 
                 
