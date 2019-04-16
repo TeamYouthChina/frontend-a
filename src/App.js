@@ -35,15 +35,6 @@ export class App extends React.Component {
             exact
             component={() => <Redirect to="/login" />}
           />
-         
-          <Route
-            path="/create-company"
-            component={routeProps => <CreateCompany {...routeProps} />}
-          />
-          <Route
-            path="/create-job"
-            component={routeProps => <CreateJob {...routeProps} />}
-          />
           <Route
             path="/home"
             component={routeProps => <Home {...routeProps} />}
@@ -53,11 +44,19 @@ export class App extends React.Component {
             component={routeProps => <Login {...routeProps} />}
           />
           <Route
-            path="/modify-company/:id"
+            path="/company/:id/job/create"
+            component={routeProps => <CreateJob {...routeProps} />}
+          />
+          <Route
+            path="/company/create"
+            component={routeProps => <CreateCompany {...routeProps} />}
+          />
+          <Route
+            path="/company/:id"
             component={routeProps => <ModifyCompany {...routeProps} />}
           />
           <Route
-            path="/modify-job/:id"
+            path="/job/:id"
             component={routeProps => <ModifyJob {...routeProps} />}
           />
           <Route

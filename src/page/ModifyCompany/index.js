@@ -1,59 +1,91 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-
-import {Redirect} from 'react-router-dom';
-
-import {languageHelper} from '../../tool/language-helper';
-import {removeUrlSlashSuffix} from '../../tool/remove-url-slash-suffix';
-import classes from './index.module.css';
-import {Breadcrumb} from '../general-component/breadcrumb';
-
-//import {CompanyPic} from './company-pic';
-import {getAsync, put} from '../../tool/api-helper';
 import {MDBBtn, MDBIcon} from 'mdbreact';
+import PropTypes from 'prop-types';
+import {Redirect} from 'react-router-dom';
+// import {Breadcrumb} from "../general-component/breadcrumb";
+import {Location} from '../general-component/location';
+import classes from './index.module.css';
+import {getAsync, put} from '../../tool/api-helper';
+import {languageHelper} from '../../tool/language-helper';
 import logo from './logo.png';
-import {Succeed} from '../general-component/successful';
+import {removeUrlSlashSuffix} from '../../tool/remove-url-slash-suffix';
 
 class ModifyCompanyReact extends React.Component {
   constructor(props) {
     super(props);
     // state
     this.state = {
-      //编辑状态设置
+      render: 0,
       edit: false,
       name: '',
-      location: '',
+      avatarUrl: '',
+      location: null,
       website: '',
-      note: '',
-      response:'',
+      note: ''
     };
     // i18n
     this.text = ModifyCompanyReact.i18n[languageHelper()];
-    //
+    // get
     this.backendGet = null;
-    this.backendPut = null;
+    // location
+    this.location = null;
+    this.getLocation = this.getLocation.bind(this);
+    // function
+    this.modify = this.modify.bind(this);
+    this.save = this.save.bind(this);
+  }
+
+  getLocation(data) {
+    this.location = data;
+  }
+
+  modify() {
+    this.setState({
+      edit: true
+    });
+  }
+
+  save() {
+    const backendPut = {
+      avatarUrl: this.state.avatarUrl,
+      id: this.props.match.params.id,
+      location: {
+        location_code: this.location.code,
+        nation_code: this.location.countryCode
+      },
+      name: this.state.name,
+      nation: this.location.countryCode,
+      note: this.state.note,
+      website: this.state.website
+    };
+    put(`/companies/${backendPut.id}`, backendPut).then((data) => {
+      if (data.status.code.toString().startsWith('2')) {
+        this.setState({
+          location: this.location.code
+        });
+        alert('修改成功。');
+      } else {
+        throw data;
+      }
+    });
+    this.setState({
+      edit: false
+    });
   }
 
   async componentDidMount() {
     this.backendGet = await getAsync(`/companies/${this.props.match.params.id}`);
-    if (!this.backendGet || !this.backendGet.status.code.toString().startsWith('2')) {
+    if (!this.backendGet.status.code.toString().startsWith('2')) {
       return;
     }
-    this.backendPut = {
-      id: this.backendGet.content.id,
-      name: this.backendGet.content.name,
-      avatarUrl: this.backendGet.content.avatarUrl,
-      //location: this.backendGet.content.location,
-      website: this.backendGet.content.website,
-      note: this.backendGet.content.note,
-      nation: this.backendGet.content.nation,
-    };
     this.setState({
+      render: 1,
       edit: false,
       name: this.backendGet.content.name,
-      //location: this.backendGet.content.location,
+      avatarUrl: this.backendGet.content.avatarUrl,
+      location: this.backendGet.content.location,
       website: this.backendGet.content.website,
-      note: this.backendGet.content.note,
+      note: this.backendGet.content.note
     });
   }
 
@@ -62,277 +94,213 @@ class ModifyCompanyReact extends React.Component {
     if (pathname) {
       return (<Redirect to={pathname} />);
     }
-    return (this.backendGet && this.backendGet.status.code.toString().startsWith('2')) ? (
-      <div className={classes.background}>
-        <div className={`${classes.top} cell-wall d-flex align-items-end`}>
-          <Breadcrumb
-            itemList={[
-              {
-                name: '搜索公司',
-                subPath: '/search-company'
-              },
-              {
-                name: '修改公司',
-                subPath: '/modify-company'
-              },
-            ]}
-          />
-        </div>
-        <div className="cell-wall">
-          <div className="cell-membrane">
-            <div className="d-flex">
-              <div>
-                {
-                  this.state.edit ? (
-                    <div>
-                      <div className={classes.companycard}>
-                        <div>
-                          <img
-                            src={logo}
-                            style={{
-                              width: '5.7vw',
-                              height: 'auto',
-                            }}
-                          />
-                        </div>
-                        <div
-                          style={{
-                            marginLeft: '2.25vw',
-                            width: '47.25vw'
-                          }}
-                        >
-                          <div>
-                            <textarea
-                              style={{
-                                fontFamily: 'PingFang SC',
-                                lineHeight: 'normal',
-                                fontSize: '1.875vw',
-                                fontWeight: 'bolder',
-                                color: '#454F69',
-                                marginBottom: '0.39vw'
-                              }}
-                              value={this.state.name}
-                              className="form-control mr-2"
-                              rows="1"
-                              onChange={(e) => {
-                                this.setState({
-                                  name: e.target.value
-                                });
-                              }}
-                            />
-                            <textarea
-                              style={{
-                                fontFamily: 'PingFang SC',
-                                lineHeight: 'normal',
-                                fontSize: '0.875rem',
-                                color: '#8D9AAF',
-                                marginBottom: '0.39vw'
-                              }}
-                              value={this.state.location}
-                              className="form-control mr-2"
-                              rows="1"
-                              onChange={(e) => {
-                                this.setState({
-                                  location: e.target.value
-                                });
-                              }}
-                            />
-                            <textarea
-                              style={{
-                                fontFamily: 'PingFang SC',
-                                lineHeight: 'normal',
-                                fontSize: '1rem',
-                                color: '#454F69',
-                                margin: '0'
-                              }}
-                              value={this.state.website}
-                              className="form-control mr-2"
-                              rows="1"
-                              onChange={(e) => {
-                                this.setState({
-                                  website: e.target.value
-                                });
-                              }}
-                            />
-                          </div>
-                        </div>
-                      </div>
-                      <div className={classes.content}>
-                        <div className={classes.name}>
-                          概况
-                        </div>
-                        <br />
-                        <textarea
-                          style={{fontSize: '1.09vw'}}
-                          value={this.state.note}
-                          className="form-control mr-2"
-                          rows="9"
-                          onChange={(e) => {
-                            this.setState({
-                              note: e.target.value
-                            });
-                          }}
-                        />
-                        <br />
-                        <p>
-                          <span className={classes.titlebolder}> 所属行业</span>
-                          <span className={classes.title}> 所属行业</span>
-                        </p>
-                       
-                      </div>
-                     
-                    </div>
-                  ) : (
-                    <div>
-                      <div className={classes.companycard}>
-                        <div>
-                          <img
-                            src={logo}
-                            style={{
-                              width: '5.7vw',
-                              height: 'auto',
-                            }}
-                          />
-                        </div>
-                        <div
-                          style={{
-                            marginLeft: '2.25vw',
-                            width: '47.25vw'
-                          }}>
-                          <div>
-                            <p
-                              style={{
-                                fontFamily: 'PingFang SC',
-                                lineHeight: 'normal',
-                                fontSize: '1.875vw',
-                                fontWeight: 'bolder',
-                                color: '#454F69',
-                                marginBottom: '0.39vw'
-                              }}
-                            >
-                              {this.state.name}
-                            </p>
-                            <p
-                              style={{
-                                fontFamily: 'PingFang SC',
-                                lineHeight: 'normal',
-                                fontSize: '0.875rem',
-                                color: '#8D9AAF',
-                                marginBottom: '0.39vw'
-                              }}
-                            > {this.state.location}
-                            </p>
-                            <p
-                              style={{
-                                fontFamily: 'PingFang SC',
-                                lineHeight: 'normal',
-                                fontSize: '1rem',
-                                color: '#454F69',
-                                margin: '0'
-                              }}
-                            >
-                              <a href={this.state.website}>{this.state.website}</a>
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                      <div className={classes.content}>
-                        <div className={classes.name}>
-                          概况
-                        </div>
-                        <br />
-                        <pre className={classes.note}>
-                          {this.state.note}
-                        </pre>
-                        <br />
-                        <p>
-                          <span className={classes.titlebolder}> 所属行业</span>
-                          <span className={classes.title}> 所属行业</span>
-                        </p>
-                      </div>
-                      
-                    </div>
-                  )
-                }
-              </div>
-              <div>
-                <div
-                  onClick={() => {
-                    this.setState({
-                      edit: true
-                    });
-                  }}
-                >
+    switch (this.state.render) {
+      case 0:
+        return null;
+      case 1:
+        return (
+          <div className={classes.background}>
+            <div className={`${classes.top} cell-wall d-flex align-items-end`}>
+              {/*
+              <Breadcrumb
+                itemList={[
                   {
-                    this.state.edit ? (
+                    name: '搜索公司',
+                    subPath: '/search-company'
+                  },
+                  {
+                    name: '修改公司',
+                    subPath: '/modify-company'
+                  },
+                ]}
+              />
+              */}
+            </div>
+            <div className="cell-wall">
+              <div className="cell-membrane">
+                <div className="d-flex">
+                  <div>
+                    {
+                      this.state.edit ? (
+                        <div>
+                          <div className={classes.companycard}>
+                            <div>
+                              <img
+                                src={logo}
+                                alt=""
+                                style={{
+                                  width: '5.7vw',
+                                  height: 'auto',
+                                }}
+                              />
+                            </div>
+                            <div
+                              style={{
+                                marginLeft: '2.25vw',
+                                width: '47.25vw'
+                              }}
+                            >
+                              <div>
+                                <input
+                                  type="text"
+                                  style={{
+                                    fontFamily: 'PingFang SC',
+                                    lineHeight: 'normal',
+                                    fontSize: '1.875vw',
+                                    fontWeight: 'bolder',
+                                    color: '#454F69',
+                                    marginBottom: '0.39vw'
+                                  }}
+                                  placeholder="公司全称"
+                                  value={this.state.name}
+                                  className="form-control mr-2"
+                                  onChange={(e) => {
+                                    this.setState({
+                                      name: e.target.value
+                                    });
+                                  }}
+                                />
+                                <Location code={this.state.location} locate={this.getLocation} edit={true} />
+                                <input
+                                  type="text"
+                                  style={{
+                                    fontFamily: 'PingFang SC',
+                                    lineHeight: 'normal',
+                                    fontSize: '1rem',
+                                    color: '#454F69',
+                                    margin: '0'
+                                  }}
+                                  placeholder="公司主页"
+                                  value={this.state.website}
+                                  className="form-control mr-2"
+                                  onChange={(e) => {
+                                    this.setState({
+                                      website: e.target.value
+                                    });
+                                  }}
+                                />
+                              </div>
+                            </div>
+                          </div>
+                          <div className={classes.content}>
+                            <div className={classes.name}>
+                              概况
+                            </div>
+                            <br />
+                            <textarea
+                              style={{fontSize: '1.09vw'}}
+                              value={this.state.note}
+                              className="form-control mr-2"
+                              rows="9"
+                              onChange={(e) => {
+                                this.setState({
+                                  note: e.target.value
+                                });
+                              }}
+                            />
+                          </div>
+                        </div>
+                      ) : (
+                        <div>
+                          <div className={classes.companycard}>
+                            <div>
+                              <img
+                                src={logo}
+                                alt=""
+                                style={{
+                                  width: '5.7vw',
+                                  height: 'auto',
+                                }}
+                              />
+                            </div>
+                            <div
+                              style={{
+                                marginLeft: '2.25vw',
+                                width: '47.25vw'
+                              }}>
+                              <div>
+                                <p
+                                  style={{
+                                    fontFamily: 'PingFang SC',
+                                    lineHeight: 'normal',
+                                    fontSize: '1.875vw',
+                                    fontWeight: 'bolder',
+                                    color: '#454F69',
+                                    marginBottom: '0.39vw'
+                                  }}
+                                >
+                                  {this.state.name}
+                                </p>
+                                <Location code={this.state.location} locate={this.getLocation} edit={false} />
+                                <p
+                                  style={{
+                                    fontFamily: 'PingFang SC',
+                                    lineHeight: 'normal',
+                                    fontSize: '1rem',
+                                    color: '#454F69',
+                                    margin: '0'
+                                  }}
+                                >
+                                  <a href={this.state.website}>{this.state.website}</a>
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                          <div className={classes.content}>
+                            <div className={classes.name}>
+                              概况
+                            </div>
+                            <br />
+                            <pre className={classes.note}>
+                              {this.state.note}
+                            </pre>
+                          </div>
+                        </div>
+                      )
+                    }
+                  </div>
+                  <div>
+                    {this.state.edit ? (
                       <MDBBtn
                         className="py-2 ml-5 mt-5 blue lighten-1"
                         color="info"
                         style={{width: '11.71vw'}}
-                        disabled
+                        onClick={this.save}
                       >
-                        <MDBIcon icon="edit" className="mr-2" />
-                        正在修改
+                        <MDBIcon icon="pencil-alt" className="mr-2" />
+                        <span>保存</span>
                       </MDBBtn>
                     ) : (
                       <MDBBtn
                         className="py-2 ml-5 mt-5 blue lighten-1"
                         color="info"
                         style={{width: '11.71vw'}}
+                        onClick={this.modify}
                       >
                         <MDBIcon icon="edit" className="mr-2" />
-                        开始修改
+                        <span>修改</span>
                       </MDBBtn>
-                    )
-                  }
+                    )}
+                    <MDBBtn
+                      className="py-2 ml-5 mt-3 "
+                      color="light-green"
+                      style={{width: '11.71vw'}}
+                      onClick={() => {
+                        this.props.history.push(`/company/${this.props.match.params.id}/job/create`);
+                      }}
+                    >
+                      <MDBIcon icon="pencil-alt" className="mr-2" />
+                      <span>新建职位</span>
+                    </MDBBtn>
+                  </div>
                 </div>
-                <MDBBtn
-                  className="py-2 ml-5 mt-3 blue lighten-1"
-                  color="info"
-                  style={{width: '11.71vw'}}
-                  onClick={() => {
-                    this.backendPut.name = this.state.name;
-                    //this.backendPut.location = parseInt(this.state.location);
-                    this.backendPut.website = this.state.website;
-                    this.backendPut.note = this.state.note;
-                    put(`/companies/${this.backendPut.id}`, this.backendPut).then((data) => {
-                      this.setState({
-                        edit: false,
-                        response:data,
-                      });
-                    });
-                  }}
-                >
-                  <MDBIcon icon="pencil-alt" className="mr-2" />
-                  保存修改
-                  <Succeed code={this.state.response} text={'创建成功'}/>
-                </MDBBtn>
-                {/*<MDBBtn className="py-2 ml-5 mt-3 " color="cyan" style={{width: '11.71vw'}}>
-                  <MDBIcon icon="pencil-alt" className="mr-2" />
-                  发布职位
-                </MDBBtn>*/}
-                <MDBBtn
-                  className="py-2 ml-5 mt-3 "
-                  color="light-green"
-                  style={{width: '11.71vw'}}
-                  onClick={() => {
-                    this.props.history.push('/create-company');
-                  }}
-                >
-                  <MDBIcon icon="pencil-alt" className="mr-2" />
-                  新建公司
-                </MDBBtn>
-                <MDBBtn className="py-2 ml-5 mt-3" color="danger" style={{width: '11.71vw'}}>
-                  <MDBIcon icon="pencil-alt" className="mr-2" />
-                  删除公司
-                </MDBBtn>
               </div>
             </div>
           </div>
-        </div>
-      </div>
-    ) : null;
-
+        );
+      default:
+        return null;
+    }
   }
 }
 

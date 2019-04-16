@@ -15,7 +15,7 @@
 .companycard{
   display: flex;
   justify-content: space-between;
-  align-items: start;
+  align-items: flex-start;
   margin-top:3vw;
   width: 66.4vw;
   padding:1.95vw 2.42vw;
