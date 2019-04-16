@@ -46,7 +46,7 @@ class ModifyJobReact extends React.Component {
     if (!this.backendGet.status.code.toString().startsWith('2')) {
       return;
     }
-    console.log(JSON.stringify(this.backendGet));
+    // console.log(JSON.stringify(this.backendGet));
     /*
     this.backendPut = {
       id: this.backendGet.content.id,
