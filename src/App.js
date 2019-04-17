@@ -10,12 +10,7 @@ import {ModifyJob} from './page/ModifyJob';
 import {NoFound} from './page/no-found';
 import {SearchCompany} from './page/SearchCompany';
 import {SearchJob} from './page/SearchJob';
-
 import {languageHelper} from './tool/language-helper';
-
-import {post} from './tool/api-helper';
-
-post('/login', {id: 1, password: '123456'});
 
 export class App extends React.Component {
   constructor(props) {
@@ -33,15 +28,7 @@ export class App extends React.Component {
           <Route
             path="/"
             exact
-            component={() => <Redirect to="/login" />}
-          />
-          <Route
-            path="/home"
             component={routeProps => <Home {...routeProps} />}
-          />
-          <Route
-            path="/login"
-            component={routeProps => <Login {...routeProps} />}
           />
           <Route
             path="/company/:id/job/create"
@@ -58,6 +45,10 @@ export class App extends React.Component {
           <Route
             path="/job/:id"
             component={routeProps => <ModifyJob {...routeProps} />}
+          />
+          <Route
+            path="/login"
+            component={routeProps => <Login {...routeProps} />}
           />
           <Route
             path="/page-no-found"
