@@ -31,7 +31,7 @@ export class BreadcrumbReact extends React.Component {
           >
             <div>
               <Link 
-                to={'/home'} className={classes['interval-text']}>主页/</Link>
+                to={'/'} className={classes['interval-text']}>主页/</Link>
             </div>
             {
               this.props.itemList.map((item, index) => {

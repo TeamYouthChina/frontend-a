@@ -1,21 +1,16 @@
 import React from 'react';
 import {BrowserRouter, Redirect, Route, Switch} from 'react-router-dom';
 
-import {CreateCompany} from './page/CreateCompany';
-import {CreateJob} from './page/CreateJob';
-import {Home} from './page/Home';
-import {Login} from './page/Login';
-import {ModifyCompany} from './page/ModifyCompany';
-import {ModifyJob} from './page/ModifyJob';
+import {CreateCompany} from './page/create-company';
+import {CreateJob} from './page/create-job';
+import {Home} from './page/home';
+import {Login} from './page/login';
+import {ModifyCompany} from './page/modify-company';
+import {ModifyJob} from './page/modify-job';
 import {NoFound} from './page/no-found';
-import {SearchCompany} from './page/SearchCompany';
-import {SearchJob} from './page/SearchJob';
-
+import {SearchCompany} from './page/search-company';
+import {SearchJob} from './page/search-job';
 import {languageHelper} from './tool/language-helper';
-
-import {post} from './tool/api-helper';
-
-post('/login', {id: 1, password: '123456'});
 
 export class App extends React.Component {
   constructor(props) {
@@ -33,44 +28,43 @@ export class App extends React.Component {
           <Route
             path="/"
             exact
-            component={() => <Redirect to="/login" />}
-          />
-         
-          <Route
-            path="/create-company"
-            component={routeProps => <CreateCompany {...routeProps} />}
+            component={routeProps => <Home {...routeProps} />}
           />
           <Route
-            path="/create-job"
+            path="/company/:id/job/create"
             component={routeProps => <CreateJob {...routeProps} />}
           />
           <Route
-            path="/home"
-            component={routeProps => <Home {...routeProps} />}
+            path="/company/create"
+            component={routeProps => <CreateCompany {...routeProps} />}
+          />
+          <Route
+            path="/company/:id"
+            component={routeProps => <ModifyCompany {...routeProps} />}
+          />
+          <Route
+            path="/job/:id"
+            component={routeProps => <ModifyJob {...routeProps} />}
           />
           <Route
             path="/login"
             component={routeProps => <Login {...routeProps} />}
           />
           <Route
-            path="/modify-company/:id"
-            component={routeProps => <ModifyCompany {...routeProps} />}
-          />
-          <Route
-            path="/modify-job/:id"
-            component={routeProps => <ModifyJob {...routeProps} />}
-          />
-          <Route
             path="/page-no-found"
             component={routeProps => <NoFound {...routeProps} />}
           />
           <Route
-            path="/search-company"
+            path="/search/company"
             component={routeProps => <SearchCompany {...routeProps} />}
           />
           <Route
-            path="/search-job"
+            path="/search/job"
             component={routeProps => <SearchJob {...routeProps} />}
+          />
+          <Route
+            path="/search"
+            component={() => <Redirect to="/search/company" />}
           />
           <Redirect to="/page-no-found" />
         </Switch>
