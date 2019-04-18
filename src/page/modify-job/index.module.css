@@ -127,3 +127,7 @@
 
   color: #454F69;
 }
+
+.enable-select select {
+  display: block !important;
+}

@@ -42,7 +42,7 @@ class JobCardReact extends React.Component {
       <div
         className={classes.Card}
         onClick={() => {
-          this.props.history.push(`/modify-job/${this.state.backend.content.id}`);
+          this.props.history.push(`/job/${this.state.backend.content.id}`);
         }}
       >
         <div className={classes.Clickable} onClick={this.clickOnCard} />
@@ -86,7 +86,6 @@ class JobCardReact extends React.Component {
               </div>
             </div>
           </div>
-         
         </div>
       </div>
     ):null;
@@ -108,16 +107,12 @@ JobCardReact.i18n = [
 
 JobCardReact.propTypes = {
   // self
-  id: PropTypes.string.isRequired,
+  id: PropTypes.number.isRequired,
 
   // React Router
   match: PropTypes.object.isRequired,
   history: PropTypes.object.isRequired,
-  location: PropTypes.object.isRequired,
-  // React Redux
-  bodyClientWidth: PropTypes.number.isRequired,
+  location: PropTypes.object.isRequired
 };
 
-export const JobCard = withRouter(
-  (JobCardReact)
-);
+export const JobCard = withRouter(JobCardReact);

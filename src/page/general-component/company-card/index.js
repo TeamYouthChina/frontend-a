@@ -49,7 +49,7 @@ class CompanyCardReact extends React.Component {
       <div 
         className={classes.Card}
         onClick={() => {
-          this.props.history.push(`/modify-company/${this.state.backend.content.id}`);
+          this.props.history.push(`/company/${this.state.backend.content.id}`);
         }}
       >
         <div className={classes.Clickable} onClick={this.clickOnCard} />
@@ -109,14 +109,12 @@ CompanyCardReact.i18n = [
 
 CompanyCardReact.propTypes = {
   // self
-  id: PropTypes.string.isRequired,
+  id: PropTypes.number.isRequired,
 
   // React Router
   match: PropTypes.object.isRequired,
   history: PropTypes.object.isRequired,
-  location: PropTypes.object.isRequired,
-  // React Redux
-  bodyClientWidth: PropTypes.number.isRequired,
+  location: PropTypes.object.isRequired
 };
 
 export const CompanyCard = withRouter(CompanyCardReact);

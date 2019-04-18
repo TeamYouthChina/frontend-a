@@ -1,15 +1,15 @@
 import React from 'react';
 import {BrowserRouter, Redirect, Route, Switch} from 'react-router-dom';
 
-import {CreateCompany} from './page/CreateCompany';
-import {CreateJob} from './page/CreateJob';
-import {Home} from './page/Home';
-import {Login} from './page/Login';
-import {ModifyCompany} from './page/ModifyCompany';
-import {ModifyJob} from './page/ModifyJob';
+import {CreateCompany} from './page/create-company';
+import {CreateJob} from './page/create-job';
+import {Home} from './page/home';
+import {Login} from './page/login';
+import {ModifyCompany} from './page/modify-company';
+import {ModifyJob} from './page/modify-job';
 import {NoFound} from './page/no-found';
-import {SearchCompany} from './page/SearchCompany';
-import {SearchJob} from './page/SearchJob';
+import {SearchCompany} from './page/search-company';
+import {SearchJob} from './page/search-job';
 import {languageHelper} from './tool/language-helper';
 
 export class App extends React.Component {
@@ -55,12 +55,16 @@ export class App extends React.Component {
             component={routeProps => <NoFound {...routeProps} />}
           />
           <Route
-            path="/search-company"
+            path="/search/company"
             component={routeProps => <SearchCompany {...routeProps} />}
           />
           <Route
-            path="/search-job"
+            path="/search/job"
             component={routeProps => <SearchJob {...routeProps} />}
+          />
+          <Route
+            path="/search"
+            component={() => <Redirect to="/search/company" />}
           />
           <Redirect to="/page-no-found" />
         </Switch>
