@@ -27,7 +27,8 @@ class ModifyJobReact extends React.Component {
       description: '',
       companyName: '',
       startTime: null,
-      deadLine: null
+      deadLine: null,
+      mail: ''
     };
     // i18n
     this.text = ModifyJobReact.i18n[languageHelper()];
@@ -63,7 +64,8 @@ class ModifyJobReact extends React.Component {
       dead_line: this.state.deadLine.getTime(),
       start_time: this.state.startTime.getTime(),
       job_description: this.state.description,
-      job_duty: this.state.duty
+      job_duty: this.state.duty,
+      mail: this.state.mail
     };
     put(`/jobs/${this.props.match.params.id}`, backendPut).then((data) => {
       if (data.status.code.toString().startsWith('2')) {
@@ -107,7 +109,8 @@ class ModifyJobReact extends React.Component {
       description: this.backendGet.content.job_description,
       companyName: this.backendGet.content.organization.name,
       startTime: new Date(this.backendGet.content.start_time),
-      deadLine: new Date(this.backendGet.content.dead_line)
+      deadLine: new Date(this.backendGet.content.dead_line),
+      mail: this.backendGet.content.mail
     });
     // console.log('this.backendGet.content.deadLine', this.backendGet.content.dead_line);
   }
@@ -252,6 +255,23 @@ class ModifyJobReact extends React.Component {
                             </div>
                             <div className={classes.descontent}>
                               <div className={classes.name}>
+                                HR 邮箱
+                              </div>
+                              <div className={classes.note}>
+                                <textarea
+                                  placeholder="描述"
+                                  value={this.state.mail}
+                                  className="form-control"
+                                  style={{fontSize: '1.09vw'}}
+                                  rows="1"
+                                  onChange={(e) => {
+                                    this.setState({
+                                      mail: e.target.value
+                                    });
+                                  }}
+                                />
+                              </div>
+                              <div className={classes.name}>
                                 职位描述
                               </div>
                               <div className={classes.note}>
@@ -332,6 +352,12 @@ class ModifyJobReact extends React.Component {
                               </div>
                             </div>
                             <div className={classes.descontent}>
+                              <div className={classes.name}>
+                                HR 邮箱
+                              </div>
+                              <div className={classes.note}>
+                                <pre>{this.state.mail}</pre>
+                              </div>
                               <div className={classes.name}>
                                 职位描述
                               </div>
