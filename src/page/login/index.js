@@ -86,7 +86,7 @@ export class Login extends React.Component {
                           rounded
                           className="btn-block z-depth-1a"
                           onClick={() => {
-                            post('/login', {id: this.state.email, password: this.state.password}).then((data) => {
+                            post('/login', {identifier: this.state.email, password: this.state.password}).then((data) => {
                               if (data.status.code.toString().startsWith('2')) {
                                 this.props.history.push('/');
                               } else {
