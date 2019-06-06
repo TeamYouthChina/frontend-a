@@ -68,16 +68,13 @@ class JobCardReact extends React.Component {
                   <img src={calender} alt="no img" />
                   <p>
                     3-5 {this.text.geYue}{' '}
-                    <span style={{ color: 'red' }}>api没有这个</span>
                   </p>
                 </div>
               </div>
               <div className={classes.Row}>
                 <div className={classes.Column}>
                   <img src={detail} alt="no img" />
-                  <p>
-                    E-Commerce<span style={{ color: 'red' }}>api没有这个</span>
-                  </p>
+                  
                 </div>
                 <div className={classes.Column}>
                   <img src={bag} alt="no img" />
