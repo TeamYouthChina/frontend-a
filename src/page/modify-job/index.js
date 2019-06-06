@@ -8,9 +8,11 @@ import {Breadcrumb} from '../general-component/breadcrumb';
 import {Location} from '../general-component/location';
 import classes from './index.module.css';
 import {getAsync, isLogin, put} from '../../tool/api-helper';
+import {AdvantageTag} from './tag-component';
 import {languageHelper} from '../../tool/language-helper';
 import logo from '../create-job/logo.png';
 import {removeUrlSlashSuffix} from '../../tool/remove-url-slash-suffix';
+import {TagReview} from '../general-component/tag-review-only';
 
 class ModifyJobReact extends React.Component {
   constructor(props) {
@@ -253,6 +255,9 @@ class ModifyJobReact extends React.Component {
                                 </div>
                               </div>
                             </div>
+                            <div>
+                              <AdvantageTag id={this.props.match.params.id} type={300}/>
+                            </div>
                             <div className={classes.descontent}>
                               <div className={classes.name}>
                                 HR 邮箱
@@ -350,6 +355,9 @@ class ModifyJobReact extends React.Component {
                                   <span>工作开始日期：{dateFormat(this.state.startTime, 'yyyy年mm月dd日 hh:MM:ss')}</span>
                                 </div>
                               </div>
+                            </div>
+                            <div>
+                              <TagReview id={this.props.match.params.id} type={300}/>
                             </div>
                             <div className={classes.descontent}>
                               <div className={classes.name}>

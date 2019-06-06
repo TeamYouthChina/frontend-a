@@ -1,5 +1,5 @@
 import React from 'react';
-import {MDBBtn, MDBIcon} from 'mdbreact';
+import {MDBBtn, MDBIcon, MDBModal, MDBModalBody, MDBModalFooter, MDBModalHeader} from 'mdbreact';
 import PropTypes from 'prop-types';
 import {Redirect} from 'react-router-dom';
 import {Breadcrumb} from '../general-component/breadcrumb';
@@ -10,6 +10,8 @@ import {languageHelper} from '../../tool/language-helper';
 import logo from './logo.png';
 import {removeUrlSlashSuffix} from '../../tool/remove-url-slash-suffix';
 import {JobCard} from '../general-component/job-card';
+import {AdvantageTag} from './tag-component';
+import {TagReview} from '../general-component/tag-review-only';
 
 class ModifyCompanyReact extends React.Component {
   constructor(props) {
@@ -23,12 +25,15 @@ class ModifyCompanyReact extends React.Component {
       location: null,
       website: '',
       note: '',
-      jobIdList: []
+      jobIdList: [],
+      modal4:false,
+      tag:''
     };
     // i18n
     this.text = ModifyCompanyReact.i18n[languageHelper()];
     // get
     this.backendGet = null;
+    this.tag='';
     // location
     this.location = null;
     this.getLocation = this.getLocation.bind(this);
@@ -60,23 +65,41 @@ class ModifyCompanyReact extends React.Component {
       note: this.state.note,
       website: this.state.website
     };
-    put(`/companies/${backendPut.id}`, backendPut).then((data) => {
-      if (data.status.code.toString().startsWith('2')) {
-        this.setState({
-          location: this.location.code
-        });
-        alert('修改成功（如果你修改了地点，那么将于下次刷新时显示新值）。');
-      } else {
-        throw data;
-      }
-    });
+    if (this.state.tag.content.length === 0) {
+      this.setState({
+        modal4:true
+      });
+    }
+    else{
+      put(`/companies/${backendPut.id}`, backendPut).then((data) => {
+        if (data.status.code.toString().startsWith('2')) {
+          this.setState({
+            location: this.location.code
+          });
+          alert('修改成功（如果你修改了地点，那么将于下次刷新时显示新值）。');
+        } else {
+          throw data;
+        }
+      });
+      this.setState({
+        edit: false
+      });
+    }
+    
+  }
+  
+  toggle = nr => () => {
+    let modalNumber = 'modal' + nr;
     this.setState({
-      edit: false
+      [modalNumber]: !this.state[modalNumber]
     });
   }
-
   async componentDidMount() {
     this.backendGet = await getAsync(`/companies/${this.props.match.params.id}`);
+    if (!this.backendGet.status.code.toString().startsWith('2')) {
+      return;
+    }
+    this.tag =  await getAsync(`/labels/200/${this.props.match.params.id}`);
     if (!this.backendGet.status.code.toString().startsWith('2')) {
       return;
     }
@@ -95,7 +118,8 @@ class ModifyCompanyReact extends React.Component {
       location: this.backendGet.content.location,
       website: this.backendGet.content.website,
       note: this.backendGet.content.note,
-      jobIdList: jobIdList
+      jobIdList: jobIdList,
+      tag:this.tag,
     });
   }
 
@@ -210,6 +234,9 @@ class ModifyCompanyReact extends React.Component {
                                 }}
                               />
                             </div>
+                            <div>
+                              <AdvantageTag id={this.props.match.params.id} type={200}/>
+                            </div>
                           </div>
                         ) : (
                           <div>
@@ -268,6 +295,10 @@ class ModifyCompanyReact extends React.Component {
                                 {this.state.note}
                               </pre>
                             </div>
+                            <div>
+                              <TagReview id={this.props.match.params.id} type={200}/>
+                            </div>
+                            
                           </div>
                         )
                       }
@@ -330,6 +361,15 @@ class ModifyCompanyReact extends React.Component {
                   </div>
                 </div>
               </div>
+              <MDBModal isOpen={this.state.modal4} toggle={this.toggle(4)} size="sm" centered>
+                <MDBModalHeader toggle={this.toggle(4)}>提示</MDBModalHeader>
+                <MDBModalBody>
+                  <h6>您必须添加至少一个标签</h6>
+                </MDBModalBody>
+                <MDBModalFooter>
+                  <MDBBtn color="secondary" size="sm" onClick={this.toggle(4)}>关闭</MDBBtn>
+                </MDBModalFooter>
+              </MDBModal>
             </div>
           );
         default:
