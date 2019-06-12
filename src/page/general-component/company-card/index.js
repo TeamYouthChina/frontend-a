@@ -3,14 +3,15 @@ import PropTypes from 'prop-types';
 
 import { withRouter } from 'react-router-dom';
 
-import arrow from './arrow.svg';
+//import arrow from './arrow.svg';
 import classes from './index.module.css';
 
-import bag from './bag.svg';
+//import bag from './bag.svg';
 
 import employee from './employee.svg';
 
 import location from './location.svg';
+import {Location} from '../location';
 import { languageHelper } from '../../../tool/language-helper';
 import {getAsync} from '../../../tool/api-helper';
 
@@ -20,7 +21,7 @@ class CompanyCardReact extends React.Component {
     super(props);
     // state
     this.state = {
-     
+
     };
     // i18n
     this.text = CompanyCardReact.i18n[languageHelper()];
@@ -42,11 +43,11 @@ class CompanyCardReact extends React.Component {
 
   clickPositions = () => {};
 
-  
+
 
   render() {
     return (this.state.backend && this.state.backend.status.code.toString().startsWith('2')) ? (
-      <div 
+      <div
         className={classes.Card}
         onClick={() => {
           this.props.history.push(`/company/${this.state.backend.content.id}`);
@@ -63,9 +64,11 @@ class CompanyCardReact extends React.Component {
             </div>
             <div className={classes.Des2}>
               <img src={location} alt="no img" className="img-fluid"/>
-              <p>
-                {this.state.backend.location}
-              </p>
+              <Location
+                code={this.state.backend.location}
+                edit={false}
+                locate={()=>{}}
+              />
             </div>
             <div className={classes.Des2}>
               <img src={employee} alt="no img" />
@@ -74,18 +77,18 @@ class CompanyCardReact extends React.Component {
               </a>
             </div>
           </div>
-          <div className={classes.Actions}>
-            <div className={classes.Positions} onClick={this.clickPositions}>
-              <button>
-                <img src={bag} alt="no img" />
-                <p>
-                  {this.text.currently} {this.state.backend.content.jobCount}{this.text.openPos}
-                </p>
-                <img src={arrow} alt="no img" />
-              </button>
-            </div>
-            
-          </div>
+          {/*<div className={classes.Actions}>*/}
+          {/*<div className={classes.Positions} onClick={this.clickPositions}>*/}
+          {/*<button>*/}
+          {/*<img src={bag} alt="no img" />*/}
+          {/*<p>*/}
+          {/*{this.text.currently} {this.state.backend.content.jobCount}{this.text.openPos}*/}
+          {/*</p>*/}
+          {/*<img src={arrow} alt="no img" />*/}
+          {/*</button>*/}
+          {/*</div>*/}
+          {/**/}
+          {/*</div>*/}
         </div>
       </div>
     ):null;
