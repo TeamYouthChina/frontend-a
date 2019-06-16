@@ -6,18 +6,22 @@ import { withRouter } from 'react-router-dom';
 import bag from './bag.svg';
 import calender from './calender.svg';
 import classes from './index.module.css';
-import detail from './detail.svg';
+//import detail from './detail.svg';
 import jobIcon from './jobIcon.svg';
 import {languageHelper} from '../../../tool/language-helper';
 import location from './location.svg';
 import {getAsync} from '../../../tool/api-helper';
+import {Location} from '../location';
+import dateFormat from 'dateformat';
 
 class JobCardReact extends React.Component {
   constructor(props) {
     super(props);
     // state
     this.state = {
-      
+      backend:'',
+      starttime:'',
+      deadline:'',
     };
     // i18n
     this.text = JobCardReact.i18n[languageHelper()];
@@ -25,12 +29,12 @@ class JobCardReact extends React.Component {
 
   async componentDidMount() {
     if (this.props.id) {
+      let backend= await getAsync(`/jobs/${this.props.id}`);
       this.setState({
-        backend: await getAsync(`/jobs/${this.props.id}`)
-      });
-    } else {
-      this.setState({
-        backend: await getAsync('/jobs/1')
+        backend: backend,
+        starttime:new Date(backend.content.start_time),
+        deadline:new Date(backend.content.dead_line),
+
       });
     }
   }
@@ -62,7 +66,11 @@ class JobCardReact extends React.Component {
               <div className={classes.Row}>
                 <div className={classes.Column}>
                   <img src={location} alt="no img" />
-                  <p>{this.state.backend.content.location}</p>
+                  <Location
+                    code={this.state.backend.content.location[0]}
+                    edit={false}
+                    locate={()=>{}}
+                  />
                 </div>
                 <div className={classes.Column}>
                   <img src={calender} alt="no img" />
@@ -73,12 +81,19 @@ class JobCardReact extends React.Component {
               </div>
               <div className={classes.Row}>
                 <div className={classes.Column}>
-                  <img src={detail} alt="no img" />
-                  
+                  <img src={calender} alt="no img" />
+                  <p>
+                    {this.text.kaiFangShenQing}{' '}
+
+                    {dateFormat(this.state.starttime,'yyyy-mm-dd')}
+                  </p>
                 </div>
                 <div className={classes.Column}>
                   <img src={bag} alt="no img" />
-                  <p>{this.text.shenQingJieZhi} {this.state.backend.content.deadLine}</p>
+                  <p>
+                    {this.text.shenQingJieZhi}{' '}
+                    {dateFormat(this.state.deadline,'yyyy-mm-dd')}
+                  </p>
                 </div>
               </div>
             </div>
@@ -93,11 +108,13 @@ JobCardReact.i18n = [
   {
     geYue: '个月',
     shenQingJieZhi: '申请截止',
+    kaiFangShenQing:'开放申请',
     shouCang: '收藏',
   },
   {
     geYue: 'months',
     shenQingJieZhi: 'Applicaiton Deadline',
+    kaiFangShenQing:'Application Start',
     shouCang: 'Like',
   },
 ];
