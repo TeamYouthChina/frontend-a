@@ -113,8 +113,9 @@ class SearchJobReact extends React.Component {
                   }}
                 />
                 <MDBBtn
-                  className=""
+                  className="ml-3"
                   color="blue"
+                  size="sm"
                   style={{
                     fontSize: '1.09vw',
                     width: '10vw'
@@ -142,8 +143,9 @@ class SearchJobReact extends React.Component {
                   }}
                 />
                 <MDBBtn
-                  className=""
+                  className="ml-3"
                   color="blue"
+                  size="sm"
                   style={{
                     fontSize: '1.09vw',
                     width: '10vw'

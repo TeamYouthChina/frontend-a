@@ -302,6 +302,27 @@ class ModifyCompanyReact extends React.Component {
                           </div>
                         )
                       }
+                      <div
+                        className={`${classes.background} cell-wall`}
+                      >
+                        <div className="cell-membrane">
+                          <div
+                            className={classes.name}
+                            style={{
+                              marginTop: '2vw'
+                            }}
+                          >
+                            全部职位
+                          </div>
+                          <div>
+                            {
+                              this.state.jobIdList.map((item, index) => {
+                                return <JobCard key={index} id={item} />;
+                              })
+                            }
+                          </div>
+                        </div>
+                      </div>
                     </div>
                     <div>
                       {this.state.edit ? (
@@ -337,27 +358,6 @@ class ModifyCompanyReact extends React.Component {
                         <span>新建职位</span>
                       </MDBBtn>
                     </div>
-                  </div>
-                </div>
-              </div>
-              <div
-                className={`${classes.background} cell-wall`}
-              >
-                <div className="cell-membrane">
-                  <div
-                    className={classes.name}
-                    style={{
-                      marginTop: '2vw'
-                    }}
-                  >
-                    全部职位
-                  </div>
-                  <div>
-                    {
-                      this.state.jobIdList.map((item, index) => {
-                        return <JobCard key={index} id={item} />;
-                      })
-                    }
                   </div>
                 </div>
               </div>
